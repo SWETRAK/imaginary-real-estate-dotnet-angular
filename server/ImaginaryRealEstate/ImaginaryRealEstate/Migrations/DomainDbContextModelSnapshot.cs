@@ -40,10 +40,6 @@ namespace ImaginaryRealEstate.Migrations
                     b.Property<Guid>("OfferId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
 
                     b.HasIndex("OfferId");
@@ -83,7 +79,8 @@ namespace ImaginaryRealEstate.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(2048)
+                        .HasColumnType("character varying(2048)");
 
                     b.HasKey("Id");
 
@@ -127,6 +124,21 @@ namespace ImaginaryRealEstate.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("OfferUser", b =>
+                {
+                    b.Property<Guid>("LikedOffersId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("LikesId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("LikedOffersId", "LikesId");
+
+                    b.HasIndex("LikesId");
+
+                    b.ToTable("OfferUser");
+                });
+
             modelBuilder.Entity("ImaginaryRealEstate.Entities.Image", b =>
                 {
                     b.HasOne("ImaginaryRealEstate.Entities.Offer", "Offer")
@@ -147,6 +159,21 @@ namespace ImaginaryRealEstate.Migrations
                         .IsRequired();
 
                     b.Navigation("Author");
+                });
+
+            modelBuilder.Entity("OfferUser", b =>
+                {
+                    b.HasOne("ImaginaryRealEstate.Entities.Offer", null)
+                        .WithMany()
+                        .HasForeignKey("LikedOffersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ImaginaryRealEstate.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("LikesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ImaginaryRealEstate.Entities.Offer", b =>

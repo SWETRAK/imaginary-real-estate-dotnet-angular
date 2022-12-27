@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Routing.Constraints;
-
 namespace ImaginaryRealEstate.Entities;
 
 public class Offer
@@ -15,8 +13,8 @@ public class Offer
     public float Bedrooms { get; set; }
     public float Bathrooms { get; set; }
     public float Area { get; set; }
-
     public string Description { get; set; }
     
+    public virtual IEnumerable<User> Likes { get; set; }
     public virtual IEnumerable<Image> Images { get; set; }
 }

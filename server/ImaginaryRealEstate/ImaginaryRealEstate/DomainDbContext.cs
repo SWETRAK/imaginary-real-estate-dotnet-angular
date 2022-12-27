@@ -39,8 +39,11 @@ public class DomainDbContext: DbContext
                 .WithOne(i => i.Offer)
                 .HasForeignKey(i => i.OfferId);
 
+            ent.HasMany<User>(p => p.Likes)
+                .WithMany(u => u.LikedOffers);
+
             // Properties
-            ent.Property(x => x.Title).IsRequired();
+            ent.Property(x => x.Title).IsRequired().HasMaxLength(2048);
             ent.Property(x => x.Address).IsRequired();
             ent.Property(x => x.Area).IsRequired();
             ent.Property(x => x.Bathrooms).IsRequired();
@@ -52,8 +55,8 @@ public class DomainDbContext: DbContext
         modelBuilder.Entity<Image>(ent =>
         {
             ent.Property(x => x.FileName).IsRequired();
-            ent.Property(x => x.Url).IsRequired();
             ent.Property(x => x.IsFrontPhoto).IsRequired().HasDefaultValue(false);
+            ent.Property(x => x.OfferId).IsRequired();
         });
         
         base.OnModelCreating(modelBuilder);

@@ -1,5 +1,7 @@
+using ImaginaryRealEstate.Authentication;
 using ImaginaryRealEstate.Models.Auth;
 using ImaginaryRealEstate.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ImaginaryRealEstate.Controllers;
@@ -16,14 +18,35 @@ public class AuthController: Controller
     }
 
     [HttpPost("login")]
-    public UserInfoDto LoginUserWithPassword([FromBody] LoginUserWithPasswordDto loginDto)
+    public ActionResult<UserInfoDto> LoginUserWithPassword([FromBody] LoginUserWithPasswordDto loginDto)
     {
-        return _authService.LoginUser(loginDto);
+        var loginResult = _authService.LoginUser(loginDto);
+        
+        Response.Cookies.Append(
+            "X-Access-Token", 
+            loginResult.Token, 
+            new CookieOptions
+            {
+                HttpOnly = true,
+                SameSite = SameSiteMode.Strict
+            });
+
+        return Ok(loginResult);
     }
 
     [HttpPost("register")]
-    public UserInfoDto RegisterUserWithPassword([FromBody] RegisterUserWithPasswordDto registerDto)
+    public ActionResult<UserInfoDto> RegisterUserWithPassword([FromBody] RegisterUserWithPasswordDto registerDto)
     {
-        return _authService.CreateUser(registerDto);
+        var registerResult = _authService.CreateUser(registerDto);
+        return Created("", registerResult);
+    }
+
+    [Authorize]
+    [HttpDelete("logout")]
+    public ActionResult<string> LogoutUserWithPassword()
+    {
+        var accessToken = AuthenticationHelper.GetAccessToken(this.Request);
+        Response.Cookies.Delete("X-Access-Token");
+        return Ok(accessToken);
     }
 }

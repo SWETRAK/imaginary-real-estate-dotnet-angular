@@ -1,3 +1,5 @@
+using System.Dynamic;
+using System.Net;
 using Amazon;
 using Amazon.S3;
 using Amazon.S3.Model;
@@ -20,9 +22,9 @@ public class S3Service : IS3Service
     {
         _logger = logger;
         _s3Client = new AmazonS3Client(
-            "AWS Access Key ",
-            "AWS Secreet Access Key",
-            RegionEndpoint.GetBySystemName("Your Region Name here")
+            "AKIATIW5P454BGIVVDLH",
+            "B4Y5rrFCem5AJup6wm9gFkLkhQeCZbeAeSnviaiD",
+            RegionEndpoint.GetBySystemName("eu-west-3")
         );
     }
 
@@ -39,51 +41,45 @@ public class S3Service : IS3Service
             _logger.LogInformation($"{nameof(S3Service)}|{nameof(CreateNewBucketAsync)}|Buket with name {bucketName} created.");
         }
     }
-    
-    public async Task<PutObjectResponse> UploadObjectAsync(string bucketName, string key, string contentBody)
-    {
-        var putRequest = new PutObjectRequest
-        {
-            BucketName = bucketName,
-            Key = key,
-            ContentBody = contentBody
-        };
-        var response1 = await _s3Client.PutObjectAsync(putRequest);
-        _logger.LogInformation($"{nameof(S3Service)}|{nameof(UploadObjectAsync)}|File: \"{key}\" was uploaded to bucket {bucketName}");
-        return response1;
-    }
 
-    public async Task<PutObjectResponse> UploadObjectAsync(string bucketName, string key, string filePath, string contentType)
-    {
-        var putRequest = new PutObjectRequest
-        {
-            BucketName = bucketName,
-            Key = key,
-            FilePath = filePath,
-            ContentType = contentType
-        };
-        var response1 = await _s3Client.PutObjectAsync(putRequest);
-        _logger.LogInformation($"{nameof(S3Service)}|{nameof(UploadObjectAsync)}|File: \"{key}\", contentType \"{contentType}\" was uploaded to bucket {bucketName}");
-        return response1;
-    }
-
-    public async Task UploadFileAsync(string bucketName, string filePath, string uniqueKey)
+    public void UploadFile(string bucketName, MemoryStream fileStream, string contentType, string uniqueKey)
     {
         var fileTransferUtility = new TransferUtility(_s3Client);
 
         var fileTransferUtilityRequest = new TransferUtilityUploadRequest
         {
             BucketName = bucketName,
-            FilePath = filePath,
             StorageClass = S3StorageClass.StandardInfrequentAccess,
+            InputStream = fileStream,
             PartSize = 6291456,
             Key = uniqueKey,
-            CannedACL = S3CannedACL.PublicRead
+            ContentType = contentType
         };
         
-        //fileTransferUtilityRequest.Metadata.Add("param1", "Value1");
+        fileTransferUtility.Upload(fileTransferUtilityRequest);
+
+        _logger.LogInformation($"{nameof(S3Service)}|{nameof(UploadFile)},Uploaded file as \"{uniqueKey}\" was uploaded to bucket {bucketName}");
+    }
+
+    public async Task<(MemoryStream, string)> GetFile(string bucketName, string uniqueKey)
+    {
+
+        var fileTransferUtility = new TransferUtility(_s3Client);
         
-        await fileTransferUtility.UploadAsync(fileTransferUtilityRequest);
-        _logger.LogInformation($"{nameof(S3Service)}|{nameof(UploadFileAsync)}|File: \"{filePath}\", as \"{uniqueKey}\" was uploaded to bucket {bucketName}");
+        var getRequest = new GetObjectRequest
+        {
+            BucketName = bucketName,
+            Key = uniqueKey,
+        };
+        
+        using var response = await fileTransferUtility.S3Client.GetObjectAsync(getRequest);
+        if (response.ResponseStream == null) throw new Exception("File not found");
+        
+        // Convert MD5Stream to MemoryStream 
+        var memoryStream = new MemoryStream();
+        await using var responseStream = response.ResponseStream;
+        await responseStream.CopyToAsync(memoryStream);
+        
+        return (memoryStream, response.Headers.ContentType);
     }
 }

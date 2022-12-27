@@ -8,7 +8,12 @@ public static class LoggerConfig
     {
         var logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
-            .WriteTo.File("./logger.log", fileSizeLimitBytes: 12000, rollOnFileSizeLimit: true, shared:true)
+            .WriteTo.File(
+                "./logger.log", 
+                fileSizeLimitBytes: 20000000, 
+                rollOnFileSizeLimit: true, 
+                shared:true, 
+                rollingInterval: RollingInterval.Day)
             .CreateLogger();
         
         logging.AddSerilog(logger);

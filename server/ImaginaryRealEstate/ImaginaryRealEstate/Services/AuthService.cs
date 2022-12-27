@@ -8,7 +8,6 @@ using ImaginaryRealEstate.Exceptions.Auth;
 using ImaginaryRealEstate.Models.Auth;
 using ImaginaryRealEstate.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
 namespace ImaginaryRealEstate.Services;

@@ -15,5 +15,10 @@ public class AuthProfile: Profile
             .ForMember(m => m.LastName, opt => opt.MapFrom(p => p.LastName))
             .ForMember(m => m.DateOfBirth, opt => opt.MapFrom(p => p.DateOfBirth.ToString("yyyy-MM-dd")))
             .ForMember(m => m.Role, opt => opt.MapFrom(p => p.Role));
+
+        CreateMap<User, MinimalUserInfo>()
+            .ForMember(m => m.Email, opt => opt.MapFrom(p => p.Email))
+            .ForMember(m => m.FirstName, opt => opt.MapFrom(p => p.FirstName))
+            .ForMember(m => m.LastName, opt => opt.MapFrom(p => p.LastName));
     }
 }
