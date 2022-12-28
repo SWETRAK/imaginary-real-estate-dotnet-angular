@@ -1,4 +1,3 @@
-using ImaginaryRealEstate.Authentication;
 using ImaginaryRealEstate.Models.Auth;
 using ImaginaryRealEstate.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -45,8 +44,7 @@ public class AuthController: Controller
     [HttpDelete("logout")]
     public ActionResult<string> LogoutUserWithPassword()
     {
-        var accessToken = AuthenticationHelper.GetAccessToken(this.Request);
         Response.Cookies.Delete("X-Access-Token");
-        return Ok(accessToken);
+        return Ok();
     }
 }

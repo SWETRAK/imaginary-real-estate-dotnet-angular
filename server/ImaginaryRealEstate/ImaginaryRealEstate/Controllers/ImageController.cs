@@ -19,7 +19,7 @@ public class ImageController: Controller
     
     [Authorize(Roles = $"{Roles.Author},{Roles.Admin}")]
     [HttpPost]
-    public ActionResult<ImageOfferResultDto> TestImage([FromForm(Name = "offerGuid")] string offerGuid, [FromForm(Name = "frontPhoto")] bool frontPhoto, IFormFile file)
+    public ActionResult<ImageOfferResultDto> UploadImage([FromForm(Name = "offerGuid")] string offerGuid, [FromForm(Name = "frontPhoto")] bool frontPhoto, IFormFile file)
     {
         Console.WriteLine(offerGuid);
         var result = _imageService.CreateImage(file, offerGuid, frontPhoto);
@@ -27,7 +27,7 @@ public class ImageController: Controller
     }
     
     [HttpGet("{imageId}")]
-    public async Task<IActionResult> Download([FromRoute] string imageId)
+    public async Task<IActionResult> DownloadImage([FromRoute] string imageId)
     {
         var resultStream = await _imageService.GetImage(imageId);
         return File(resultStream.Item1.GetBuffer(), resultStream.Item2, "kamil pietrak");

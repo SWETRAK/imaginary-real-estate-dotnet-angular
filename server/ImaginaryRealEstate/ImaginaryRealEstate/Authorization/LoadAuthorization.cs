@@ -7,13 +7,8 @@ public static class LoadAuthorization
 {
     public static IServiceCollection AddAuthorizationCustom(this IServiceCollection services)
     {
-        services.AddAuthorization(options =>
+        services.AddAuthorization((options) =>
         {
-            // Example of policy
-            // options.AddPolicy("IsAuthor", policyBuilder =>
-            // {
-            //     policyBuilder.RequireRole("Author");
-            // });
         });
         
         services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
