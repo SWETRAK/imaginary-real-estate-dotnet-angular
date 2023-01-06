@@ -6,7 +6,7 @@ public static class Roles
     public const string User = "USER";
     public const string Author = "AUTHOR";
 
-    public static string[] GetAllRoles()
+    public static IEnumerable<string> GetAllRoles()
     {
         return new[] { Admin, User, Author};
     }

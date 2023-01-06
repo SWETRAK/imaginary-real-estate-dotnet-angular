@@ -4,16 +4,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ImaginaryRealEstate;
 
-// TODO: Add connection string into configuration file
 public class DomainDbContext: DbContext
 {
+    private readonly IConfiguration _configuration;
+
+    public DomainDbContext(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+
     public DbSet<User> Users { get; set; }
     public DbSet<Image> Images { get; set; }
     public DbSet<Offer> Offers { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql("Host=localhost; Database=imaginary-real-estate; Username=postgres; Password=postgres");
+        optionsBuilder.UseNpgsql(_configuration.GetConnectionString("WebApiDatabase"));
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -29,7 +35,6 @@ public class DomainDbContext: DbContext
 
         modelBuilder.Entity<Offer>(ent =>
         {
-            // Relations
             ent
                 .HasOne(p => p.Author)
                 .WithMany()
@@ -39,10 +44,9 @@ public class DomainDbContext: DbContext
                 .WithOne(i => i.Offer)
                 .HasForeignKey(i => i.OfferId);
 
-            ent.HasMany<User>(p => p.Likes)
+            ent.HasMany(p => p.Likes)
                 .WithMany(u => u.LikedOffers);
-
-            // Properties
+            
             ent.Property(x => x.Title).IsRequired().HasMaxLength(2048);
             ent.Property(x => x.Address).IsRequired();
             ent.Property(x => x.Area).IsRequired();

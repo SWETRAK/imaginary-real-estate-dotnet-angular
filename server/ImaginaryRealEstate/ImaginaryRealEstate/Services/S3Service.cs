@@ -1,5 +1,3 @@
-using System.Dynamic;
-using System.Net;
 using Amazon;
 using Amazon.S3;
 using Amazon.S3.Model;
@@ -37,8 +35,8 @@ public class S3Service : IS3Service
                 BucketName = bucketName,
                 UseClientRegion = true
             };
-            var putBucketResponse = await _s3Client.PutBucketAsync(putBucketRequest);
-            _logger.LogInformation($"{nameof(S3Service)}|{nameof(CreateNewBucketAsync)}|Buket with name {bucketName} created.");
+            await _s3Client.PutBucketAsync(putBucketRequest);
+            _logger.LogInformation("{S3ServiceName}|{NewBucketAsyncName}|Buket with name {BucketName} created ", nameof(S3Service), nameof(CreateNewBucketAsync), bucketName);
         }
     }
 
@@ -58,7 +56,7 @@ public class S3Service : IS3Service
         
         fileTransferUtility.Upload(fileTransferUtilityRequest);
 
-        _logger.LogInformation($"{nameof(S3Service)}|{nameof(UploadFile)},Uploaded file as \"{uniqueKey}\" was uploaded to bucket {bucketName}");
+        _logger.LogInformation("{S3ServiceName}|{UploadFileName},Uploaded file as \"{UniqueKey}\" was uploaded to bucket {BucketName}", nameof(S3Service), nameof(UploadFile), uniqueKey, bucketName);
     }
 
     public async Task<(MemoryStream, string)> GetFile(string bucketName, string uniqueKey)
@@ -75,7 +73,6 @@ public class S3Service : IS3Service
         using var response = await fileTransferUtility.S3Client.GetObjectAsync(getRequest);
         if (response.ResponseStream == null) throw new Exception("File not found");
         
-        // Convert MD5Stream to MemoryStream 
         var memoryStream = new MemoryStream();
         await using var responseStream = response.ResponseStream;
         await responseStream.CopyToAsync(memoryStream);

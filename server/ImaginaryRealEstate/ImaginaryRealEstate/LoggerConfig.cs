@@ -9,7 +9,7 @@ public static class LoggerConfig
         var logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
             .WriteTo.File(
-                "./logger.log", 
+                "./Logs/logger.log", 
                 fileSizeLimitBytes: 20000000, 
                 rollOnFileSizeLimit: true, 
                 shared:true, 

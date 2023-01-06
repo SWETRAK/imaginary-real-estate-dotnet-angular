@@ -47,20 +47,20 @@ public class ErrorHandlingMiddleware: IMiddleware
         {
             if (e.InnerException?.GetType() == typeof(NpgsqlException))
             {
-                _logger.LogError("NpgsqlException error {error} => {message}", e, e.Message);
+                _logger.LogError("NpgsqlException error {Error} => {Message}", e, e.Message);
                 context.Response.StatusCode = 500;
                 await context.Response.WriteAsync("Internal server error. Database is down");
             }
             else
             {
-                _logger.LogError("InvalidOperationException error {error} => {message}", e, e.Message);
+                _logger.LogError("InvalidOperationException error {Error} => {Message}", e, e.Message);
                 context.Response.StatusCode = 500;
                 await context.Response.WriteAsync("Internal server error");
             }
         }
         catch (Exception e)
         {
-            _logger.LogError("Unknown error {error} => {message}", e, e.Message);
+            _logger.LogError("Unknown error {Error} => {Message}", e, e.Message);
             Console.Write(e.GetType());
             context.Response.StatusCode = 500;
             await context.Response.WriteAsync("Internal server error");
