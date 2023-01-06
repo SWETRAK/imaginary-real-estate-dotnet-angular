@@ -1,0 +1,19 @@
+<div class="card my-margin">
+    <div class="my-card-content">
+        <div class="my-media">
+            <app-ire-offer-front-image [image]="frontImage"></app-ire-offer-front-image>
+        </div>
+        <div class="my-media-content">
+            <p class="title is-4">{{ offer.title }}</p>
+            <p class="subtitle is-6">{{ offer.address }}</p>
+            <p class="is-4"> Area: <strong>{{ offer.area }}m2</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-bed"></i> <strong>{{ offer.bedrooms }}</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-bath"></i> <strong>{{ offer.bathrooms }}</strong></p>
+            <div class="content my-text" >
+                {{ offer.description }}
+            </div>
+            <a [routerLink]="['/details', offer.identifier]" class="button is-info">Details</a>
+            <br>
+                <button *ngIf="!isLiked && loggedIn" class="button is-success" (click)="addLike()">Like</button>
+                <button *ngIf="isLiked && loggedIn" class="button is-danger" (click)="removeLike()">Unlike</button>
+        </div>
+    </div>
+</div>

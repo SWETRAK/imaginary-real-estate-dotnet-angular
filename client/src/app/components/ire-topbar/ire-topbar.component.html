@@ -1,0 +1,52 @@
+<nav class="navbar" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item" href="/">
+            <img src="/assets/img/logo.png"
+                 alt="Bulma: Free, open source, and modern CSS framework based on Flexbox" width="112" height="28">
+        </a>
+        <a role="button" #navBurger class="navbar-burger" (click)="toggleNavbar()">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+    <div class="navbar-menu" #navMenu (click)="toggleNavbar()">
+        <div class="navbar-start">
+            <a class="navbar-item" routerLink="/home" routerLinkActive="active">
+                HOME
+            </a>
+            <a class="navbar-item" routerLink="/offers" routerLinkActive="active">
+                OFFERS
+            </a>
+            <a *ngIf="logged" class="navbar-item" routerLink="/favourites" routerLinkActive="active">
+                FAVOURITES
+            </a>
+
+            <a *ngIf="['ADMIN', 'AUTHOR'].includes(userInfo.role)" class="navbar-item" routerLink="/list" routerLinkActive="active">
+                LIST OFFER
+            </a>
+            <a class="navbar-item" routerLink="/contact" routerLinkActive="active">
+                CONTACT
+            </a>
+        </div>
+
+        <div class="navbar-end" *ngIf="logged">
+            <div class="navbar-item">
+                <div class="buttons">
+                    <a class="button is-success is-outlined" routerLink="/user/info" routerLinkActive="active" >{{this.userInfo.firstName}} {{this.userInfo.lastName}}</a>
+                    <a class="button is-danger" routerLink="/auth/logout" routerLinkActive="active">LOGOUT</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="navbar-end" *ngIf="!logged">
+            <div class="navbar-item">
+                <div class="buttons">
+                    <a class="button is-success is-outlined" routerLink="/auth/login" routerLinkActive="active">LOGIN</a>
+                    <a class="button is-primary is-outlined" routerLink="/auth/register" routerLinkActive="active">REGISTER</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</nav>

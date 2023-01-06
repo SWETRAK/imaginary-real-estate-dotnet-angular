@@ -1,0 +1,201 @@
+<div class="modal is-active">
+    <div (click)="close()" class="modal-background"></div>
+    <div class="modal-card">
+
+        <div class="modal-card-body">
+
+            <form (ngSubmit)="createOffer()" [formGroup]="listOfferForm">
+
+                <!--    TITLE    -->
+                <div class="field">
+                    <label class="label">Title</label>
+                    <div class="control">
+                        <input
+                            class="input"
+                            formControlName="title"
+                            id="title"
+                            placeholder="Title"
+                            required
+                            type="text">
+                    </div>
+                    <p *ngIf="!listOfferForm.controls['title'].valid && listOfferForm.controls['title'].touched"
+                       class="help is-danger" id="title-message">Title field can't be empty</p>
+                </div>
+                <!--    ADDRESS  -->
+                <div class="field">
+                    <label class="label">Address</label>
+                    <div class="control">
+                        <input
+                            class="input"
+                            formControlName="address"
+                            id="address"
+                            placeholder="Address"
+                            required
+                            type="text">
+                    </div>
+                    <p *ngIf="!listOfferForm.controls['address'].valid && listOfferForm.controls['address'].touched"
+                       class="help is-danger" id="address-message">Address field can't be empty</p>
+                </div>
+                <!--    PRICE    -->
+                <div class="field">
+                    <label class="label">Price (PLN)</label>
+                    <div class="control">
+                        <input
+                            class="input"
+                            formControlName="price"
+                            id="price"
+                            placeholder="Price"
+                            required
+                            type="number">
+                    </div>
+                    <p *ngIf="!listOfferForm.controls['price'].valid && listOfferForm.controls['price'].touched"
+                       class="help is-danger" id="price-message">Price field can't be empty</p>
+                </div>
+                <!--    AREA Apartment   -->
+                <div class="field">
+                    <label class="label">Apartment Area (m2)</label>
+                    <div class="control">
+                        <input
+                            class="input"
+                            formControlName="area"
+                            id="area"
+                            placeholder="Apartment Area"
+                            required
+                            type="number">
+                    </div>
+                    <p *ngIf="!listOfferForm.controls['area'].valid && listOfferForm.controls['area'].touched"
+                       class="help is-danger" id="area-message">Area field can't be empty</p>
+                </div>
+
+                <!--    BEDROOMS    -->
+                <div class="field">
+                    <label class="label">Bedrooms</label>
+                    <div class="control has-icons-left">
+                        <div class="select is-fullwidth">
+                            <select formControlName="bedrooms" id="bedrooms">
+                                <option selected value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                            </select>
+                        </div>
+                        <span class="icon is-small is-left">
+                    <i class="fa-solid fa-bed"></i>
+                </span>
+                    </div>
+                </div>
+                <!--    BATHROOMS    -->
+                <div class="field">
+                    <label class="label">Bathrooms</label>
+                    <div class="control has-icons-left">
+                        <div class="select is-fullwidth">
+                            <select formControlName="bathrooms" id="bathrooms">
+                                <option selected value="1">1</option>
+                                <option value="1.5">1.5</option>
+                                <option value="2">2</option>
+                                <option value="2.5">2.5</option>
+                                <option value="3">3</option>
+                                <option value="3.5">3.5</option>
+                                <option value="4">4</option>
+                                <option value="4.5">4.5</option>
+                                <option value="5">5</option>
+                                <option value="5.5">5.5</option>
+                                <option value="6">6</option>
+                            </select>
+                        </div>
+                        <span class="icon is-small is-left">
+                    <i class="fa-solid fa-bath"></i>
+                </span>
+                    </div>
+                </div>
+                <!--    Description    -->
+                <div class="field">
+                    <label class="label">Description</label>
+                    <div class="control">
+                            <textarea
+                                class="textarea"
+                                formControlName="description"
+                                id="description"
+                                placeholder="Apartment description"
+                                required>
+                            </textarea>
+                    </div>
+                    <p *ngIf="!listOfferForm.controls['description'].valid && listOfferForm.controls['description'].touched"
+                       class="help is-danger" id="description-message">Description field can't be empty</p>
+                </div>
+
+
+                <!--        IMAGES        -->
+
+
+                <div class="field">
+                    <label class="label">Front image</label>
+                    <div class="file has-name is-fullwidth">
+                        <label class="file-label">
+                            <input
+                                class="file-input"
+                                formControlName="frontPhoto"
+                                id="front_photo"
+                                required
+                                accept="image/png, image/jpeg"
+                                type="file"
+                                (change)="onFrontFileChange($event)">
+                            <span class="file-cta">
+                                <span class="file-icon">
+                                    <i class="fas fa-upload"></i>
+                                </span>
+                                <span class="file-label">
+                                    Choose front image
+                                </span>
+                            </span>
+                            <span class="file-name" id="front_photo_label">
+                                {{frontLabel}}
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Additional images</label>
+
+                    <div class="my-margin-10-0">
+                        <div class="file has-name is-fullwidth">
+                            <label class="file-label">
+                                <input
+                                    class="file-input"
+                                    formControlName="addPhoto"
+                                    id="add_photo1"
+                                    type="file"
+                                    accept="image/png, image/jpeg"
+                                    multiple
+                                    (change)="onAdditionalPhotos($event)">
+                                <span class="file-cta">
+                                <span class="file-icon">
+                                    <i class="fas fa-upload"></i>
+                                </span>
+                                <span class="file-label">
+                                    Choose additional image
+                                </span>
+                                </span>
+                                <span class="file-name">
+                                    {{additionalLabel}}
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="field is-grouped is-grouped-right">
+                    <div class="control">
+                        <button class="button is-success" type="submit">Login</button>
+                    </div>
+                    <div class="control">
+                        <input class="button is-link is-light" (click)="close()" type="reset" value="Cancel">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

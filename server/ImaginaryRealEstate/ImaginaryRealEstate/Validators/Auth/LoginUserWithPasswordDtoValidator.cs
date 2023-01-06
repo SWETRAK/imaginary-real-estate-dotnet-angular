@@ -12,6 +12,7 @@ public class LoginUserWithPasswordDtoValidator: AbstractValidator<LoginUserWithP
             .EmailAddress();
 
         RuleFor(x => x.Password)
-            .NotEmpty();
+            .NotEmpty()
+            .MinimumLength(8);
     }
 }

@@ -18,7 +18,8 @@ public class OfferProfile: Profile
             .ForMember(m => m.Bedrooms, opt => opt.MapFrom(p => p.Bedrooms))
             .ForMember(m => m.Bathrooms, opt => opt.MapFrom(p => p.Bathrooms))
             .ForMember(m => m.Area, opt => opt.MapFrom(p => p.Area))
-            .ForMember(m => m.Images, opt => opt.MapFrom(p => p.Images));
+            .ForMember(m => m.Images, opt => opt.MapFrom(p => p.Images))
+            .ForMember(m => m.Likes, opt => opt.MapFrom(p => p.Likes.ToArray().Length));
 
         CreateMap<NewOfferIncomingDto, Offer>()
             .ForMember(m => m.Id, opt => opt.Ignore())

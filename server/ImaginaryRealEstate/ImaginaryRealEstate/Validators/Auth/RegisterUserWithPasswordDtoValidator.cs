@@ -1,4 +1,3 @@
-using System.Data;
 using AgeCalculator;
 using FluentValidation;
 using ImaginaryRealEstate.Consts;
@@ -20,10 +19,13 @@ public class RegisterUserWithPasswordDtoValidator: AbstractValidator<RegisterUse
             });
 
         RuleFor(x => x.Password)
-            .NotEmpty();
+            .NotEmpty()
+            .MinimumLength(8);
 
         RuleFor(x => x.RepeatPassword)
-            .Equal(e => e.Password);
+            .NotEmpty()
+            .Equal(e => e.Password)
+            .MinimumLength(8);
 
         RuleFor(x => x.FirstName)
             .NotEmpty();

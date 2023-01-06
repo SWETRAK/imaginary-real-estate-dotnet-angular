@@ -1,0 +1,76 @@
+<app-ire-topbar></app-ire-topbar>
+
+<section class="hero is-success is-fullheight-with-navbar" style="background-image: url(/assets/img/pexelsIndexBackground.jpg); background-size: cover; background-position: center" >
+    <div class="hero-body">
+        <div class="container">
+            <p class="title">
+                Imaginary Real Estate Agent
+            </p>
+            <p class="subtitle">
+                Find your place on earth.
+            </p>
+        </div>
+    </div>
+</section>
+<!--  /HELLO BANNER  -->
+
+
+<!--  CONTENT  -->
+
+<div class="container">
+    <div class="my-margin">
+
+        <h3 class="subtitle is-1">About us</h3>
+
+        <div class="columns">
+
+            <div class="column is-full-mobile is-two-thirds-tablet is-four-fifths-desktop">
+
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium culpa dignissimos facilis incidunt laboriosam quisquam vitae. Culpa ea eum natus quis sed. At dolore eligendi esse magnam, nobis quo totam?
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur consequuntur deserunt, dignissimos distinctio dolorum ducimus ex facilis hic impedit ipsam maiores maxime molestias non nostrum sint voluptas voluptates! Autem, vero.
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam cumque dicta dolorum fugiat incidunt iste, laboriosam nam quaerat quisquam sed sequi tenetur ullam voluptatibus! Ab aliquid commodi dolore sapiente voluptatibus.
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aliquid aperiam beatae cumque eius hic illo inventore, ipsam itaque laboriosam libero optio quae reprehenderit soluta suscipit. Commodi deserunt iusto possimus?
+
+            </div>
+
+            <div class="column">
+                <figure class="image">
+                    <img src="/assets/img/laurKonsumenta.webp" alt="Laur konsumenta">
+                </figure>
+            </div>
+
+        </div>
+
+
+
+    </div>
+</div>
+
+
+<div class="container mt-5 mb-5">
+    <h3 class="subtitle is-1">Favourite searches</h3>
+    <div class="my-city-gallery">
+
+        <a [routerLink]="['/offers', 'Lublin']" class="my-city-gallery-object" style="background-image: url(/assets/img/pexelsLublin.jpg)">
+            <h2 class="has-text-white title">Lublin</h2>
+        </a>
+        <a [routerLink]="['/offers', 'Warszawa']"  class="my-city-gallery-object" style="background-image: url(/assets/img/pexelsWarszawa.jpg)">
+            <h2 class="has-text-white title">Warszawa</h2>
+        </a>
+        <a [routerLink]="['/offers', 'Kraków']" class="my-city-gallery-object" style="background-image: url(/assets/img/pexelsKrakow.jpg)">
+            <h2 class="has-text-white title">Kraków</h2>
+        </a>
+        <a [routerLink]="['/offers', 'Gdańsk']" class="my-city-gallery-object" style="background-image: url(/assets/img/pexelsGdansk.jpg)">
+            <h2 class="has-text-white title">Gdańsk</h2>
+        </a>
+        <a [routerLink]="['/offers', 'Wrocław']" class="my-city-gallery-object" style="background-image: url(/assets/img/pexelsWroclaw.jpg)">
+            <h2 class="has-text-white title">Wrocław</h2>
+        </a>
+        <a [routerLink]="['/offers', 'Poznań']" class="my-city-gallery-object" style="background-image: url(/assets/img/pexelsPoznan.jpg)">
+            <h2 class="has-text-white title">Poznań</h2>
+        </a>
+
+    </div>
+</div>
+
+<app-ire-footer></app-ire-footer>

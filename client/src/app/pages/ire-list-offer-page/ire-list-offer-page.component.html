@@ -1,0 +1,37 @@
+<app-ire-topbar></app-ire-topbar>
+
+<!--  HELLO BANNER  -->
+<section class="hero is-warning is-medium" style="background-image: url(/assets/img/pexelsListOfferBackground.jpg); background-size: cover">
+    <div class="hero-body">
+        <div class="container">
+            <h1 class="title has-text-white">
+                List your offer now and reach the client faster.
+            </h1>
+            <h2 class="subtitle has-text-white">
+                Get noticed in the real estate market
+            </h2>
+            <button class="button is-small is-rounded is-info is-light" (click)="openModal()" >List new offer</button>
+        </div>
+    </div>
+</section>
+<!--  /HELLO BANNER  -->
+
+<div class="is-hidden" id="progress">
+    <div class="my-margin">
+        <progress class="progress is-success is-small" max="100">20%</progress>
+    </div>
+</div>
+
+<!--  CONTENT  -->
+<div class="container">
+    <div class="my-margin">
+        <app-ire-list-offer-modal *ngIf="modalActivated" (closed)="closeModal($event)"></app-ire-list-offer-modal>
+
+        <app-ire-offer-author-baner *ngFor="let offer of listedOffers" [offer]="offer" (removed)="removeFromList($event)"></app-ire-offer-author-baner>
+
+    </div>
+    <!--  Add offer form  -->
+</div>
+
+
+<app-ire-footer></app-ire-footer>

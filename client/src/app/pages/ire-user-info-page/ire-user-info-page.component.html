@@ -1,0 +1,50 @@
+<app-ire-topbar></app-ire-topbar>
+
+<div class="container">
+    <div class="columns">
+        <div class="column">
+            <table class='table is-fullwidth'>
+                <tbody>
+                <tr>
+                    <td>Email:</td>
+                    <td>{{ user.email }}</td>
+
+                </tr>
+
+                <tr>
+                    <td>First Name</td>
+                    <td>{{ user.firstName }}</td>
+                </tr>
+
+                <tr>
+                    <td>Last Name</td>
+                    <td>{{ user.lastName }}</td>
+                </tr>
+
+                <tr>
+                    <td>Role</td>
+                    <td>{{ user.role }}</td>
+                </tr>
+
+                <tr>
+                    <td>Date of birth</td>
+                    <td>{{ user.dateOfBirth }}</td>
+                </tr>
+                <tr>
+                    <td>Password</td>
+                    <td><button routerLink="/user/change/password" routerLinkActive="active" class="button is-small is-danger is-outlined is-rounded">Change Password</button></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="column">
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<app-ire-footer></app-ire-footer>

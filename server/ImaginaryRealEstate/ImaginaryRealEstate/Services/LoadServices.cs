@@ -1,4 +1,3 @@
-using ImaginaryRealEstate.Models.Offers;
 using ImaginaryRealEstate.Services.Interfaces;
 
 namespace ImaginaryRealEstate.Services;
@@ -10,8 +9,8 @@ public static class LoadServices
         services.AddScoped<IS3Service, S3Service>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IOfferService, OfferService>();
-        
         services.AddScoped<IImageService, ImageService>();
+        services.AddScoped<IUserService, UserService>();
         
         return services;
     }

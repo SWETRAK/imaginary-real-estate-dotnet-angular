@@ -10,6 +10,6 @@ public class ImageProfile: Profile
     {
         CreateMap<Image, ImageOfferResultDto>()
             .ForMember(m => m.Identifier, opt => opt.MapFrom(p => p.Id.ToString()))
-            .ForMember(m => m.IsFrontPhoto, opt => opt.MapFrom(p => p.IsFrontPhoto));
+            .ForMember(m => m.FrontPhoto, opt => opt.MapFrom(p => p.IsFrontPhoto));
     }
 }

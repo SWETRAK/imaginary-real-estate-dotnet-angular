@@ -1,3 +1,4 @@
+using ImaginaryRealEstate.Authentication;
 using ImaginaryRealEstate.Models.Auth;
 using ImaginaryRealEstate.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -10,10 +11,32 @@ namespace ImaginaryRealEstate.Controllers;
 public class AuthController: Controller
 {
     private readonly IAuthService _authService;
+    private readonly AuthenticationSettings _authenticationSettings;
 
-    public AuthController(IAuthService authService)
+    public AuthController(IAuthService authService, AuthenticationSettings authenticationSettings)
     {
         _authService = authService;
+        _authenticationSettings = authenticationSettings;
+    }
+
+    [HttpGet]
+    [Authorize]
+    public ActionResult<UserInfoDto> CheckUserResult()
+    {
+        var userId = AuthenticationHelper.GetUserId(this.User);
+        var loginResult = _authService.GetUserInfo(userId);
+        
+        Response.Cookies.Append(
+            "X-Access-Token", 
+            loginResult.Item2, 
+            new CookieOptions
+            {
+                HttpOnly = false,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.Now.AddDays(_authenticationSettings.JwtExpireDays)
+            });
+        
+        return Ok(loginResult.Item1);
     }
 
     [HttpPost("login")]
@@ -23,28 +46,38 @@ public class AuthController: Controller
         
         Response.Cookies.Append(
             "X-Access-Token", 
-            loginResult.Token, 
+            loginResult.Item2, 
             new CookieOptions
             {
-                HttpOnly = true,
-                SameSite = SameSiteMode.Strict
+                HttpOnly = false,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.Now.AddDays(_authenticationSettings.JwtExpireDays)
             });
-
-        return Ok(loginResult);
+        return Ok(loginResult.Item1);
     }
 
     [HttpPost("register")]
     public ActionResult<UserInfoDto> RegisterUserWithPassword([FromBody] RegisterUserWithPasswordDto registerDto)
     {
         var registerResult = _authService.CreateUser(registerDto);
-        return Created("", registerResult);
+        
+        Response.Cookies.Append(
+            "X-Access-Token", 
+            registerResult.Item2,
+            new CookieOptions
+            {
+                HttpOnly = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.Now.AddDays(_authenticationSettings.JwtExpireDays)
+            });
+        return Created("", registerResult.Item1);
     }
 
     [Authorize]
     [HttpDelete("logout")]
-    public ActionResult<string> LogoutUserWithPassword()
+    public ActionResult<bool> LogoutUserWithPassword()
     {
         Response.Cookies.Delete("X-Access-Token");
-        return Ok();
+        return Ok(true);
     }
 }

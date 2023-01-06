@@ -1,0 +1,37 @@
+<div class="my-container">
+    <div class="my-center">
+        <div class="card" style="width: 100%">
+            <div class="card-content">
+                <p class="title">Login</p>
+                <div class="content">
+                    <p *ngIf="loginError" class="has-text-danger">Incorrect login data!!</p>
+                    <form [formGroup]="loginForm" (ngSubmit)="loginUser()">
+                        <label for="email">Email</label>
+                        <input
+                            class="input is-expanded mb-2"
+                            id="email"
+                            formControlName="email"
+                            type="email"
+                            required
+                            placeholder="Provide email">
+                        <p *ngIf="!loginForm.controls['email'].valid && loginForm.controls['email'].touched" class="has-text-danger is-fullwidth is-small mb-2">Incorrect email format.</p>
+
+                        <label for="password">Password</label>
+                        <input
+                            class="input is-expanded mb-2"
+                            id="password"
+                            formControlName="password"
+                            type="password"
+                            required
+                            placeholder="Provide password">
+                        <p *ngIf="!loginForm.controls['password'].valid && loginForm.controls['password'].touched" class="has-text-danger is-small is-fullwidth mb-2">Incorrect password format. Should be min 8 char length.</p>
+
+                        <button type="submit" class="button is-fullwidth is-success mt-5">Login</button>
+                    </form>
+                    <a routerLink="/auth/register" routerLinkActive="active" class="button is-fullwidth mt-3">Register</a>
+                    <a routerLink="/home" routerLinkActive="active" class="button is-warning is-outlined is-fullwidth mt-3">Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

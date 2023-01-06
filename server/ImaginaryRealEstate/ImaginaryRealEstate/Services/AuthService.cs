@@ -5,6 +5,7 @@ using AutoMapper;
 using ImaginaryRealEstate.Authentication;
 using ImaginaryRealEstate.Entities;
 using ImaginaryRealEstate.Exceptions.Auth;
+using ImaginaryRealEstate.Exceptions.Offer;
 using ImaginaryRealEstate.Models.Auth;
 using ImaginaryRealEstate.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -34,33 +35,40 @@ public class AuthService : IAuthService
         _dbContext = dbContext;
         _mapper = mapper;
     }
-    
-    public UserInfoDto CreateUser(RegisterUserWithPasswordDto registerUserWithPasswordDto )
-    {  
-        var newUser = new User
-        {
-            Email = registerUserWithPasswordDto.Email,
-            FirstName = registerUserWithPasswordDto.FirstName,
-            LastName = registerUserWithPasswordDto.LastName,
-            DateOfBirth = registerUserWithPasswordDto.DateOfBirth,
-            Role = registerUserWithPasswordDto.Role
-        };
+
+    public (UserInfoDto, string) GetUserInfo(string guideId)
+    {
+        if (!Guid.TryParse(guideId, out var guideIdGuid)) throw new NoGuidException();
+
+        var user = _dbContext.Users.FirstOrDefault(u => u.Id == guideIdGuid);
+        
+        if (user is null) throw new InvalidLoginDataException();
+        
+        var token = GenerateJwtToken(user);
+        var userInfoDto = _mapper.Map<UserInfoDto>(user);
+
+        return (userInfoDto, token);
+    }
+
+    public (UserInfoDto, string) CreateUser(RegisterUserWithPasswordDto registerUserWithPasswordDto )
+    {
+        var newUser = _mapper.Map<User>(registerUserWithPasswordDto);
 
         var hashedPassword = _passwordHasher.HashPassword(newUser, registerUserWithPasswordDto.Password);
         newUser.HashPassword = hashedPassword;
 
         _dbContext.Users.Add(newUser);
         _dbContext.SaveChanges();
-        _logger.LogInformation($"User created with {newUser.Email} at {DateTime.Now.ToString("yyyy-MMMM-dd h:mm:ss tt zz")}.");
+        _logger.LogInformation("User created with {NewUserEmail} at {S}", newUser.Email, DateTime.Now.ToString("yyyy-MMMM-dd h:mm:ss tt zz"));
 
         var userInfoDto = _mapper.Map<UserInfoDto>(newUser);
-        userInfoDto.Token = GenerateJwtToken(newUser);
+        var token = GenerateJwtToken(newUser);
 
-        _logger.LogInformation($"User {newUser.Email} logged in at {DateTime.Now.ToString("yyyy-MMMM-dd h:mm:ss tt zz")}.");
-        return userInfoDto;
+        _logger.LogInformation("User {NewUserEmail} logged in at {S}", newUser.Email, DateTime.Now.ToString("yyyy-MMMM-dd h:mm:ss tt zz"));
+        return (userInfoDto, token);
     }
     
-    public UserInfoDto LoginUser(LoginUserWithPasswordDto userDto)
+    public (UserInfoDto, string) LoginUser(LoginUserWithPasswordDto userDto)
     {
         var user = _dbContext
             .Users
@@ -72,20 +80,20 @@ public class AuthService : IAuthService
         if (result == PasswordVerificationResult.Failed) throw new InvalidLoginDataException();
         
         var userInfoDto = _mapper.Map<UserInfoDto>(user);
-        userInfoDto.Token = GenerateJwtToken(user);
-        _logger.LogInformation($"User created with {user.Email} at {DateTime.Now.ToString("yyyy-MMMM-dd h:mm:ss tt zz")}.");
-        return userInfoDto;
+        var token = GenerateJwtToken(user);
+        _logger.LogInformation("User created with {UserEmail} at {S}", user.Email, DateTime.Now.ToString("yyyy-MMMM-dd h:mm:ss tt zz"));
+        return (userInfoDto, token);
     }
 
     private string GenerateJwtToken(User user)
     {
         var claims = new List<Claim>()
         {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Email, user.Email),
-            new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),    
-            new Claim(ClaimTypes.Role, user.Role),
-            new Claim("DateOfBirth", user.DateOfBirth.ToString("yyyy-MM-dd"))
+            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new(ClaimTypes.Email, user.Email),
+            new(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),    
+            new(ClaimTypes.Role, user.Role),
+            new("DateOfBirth", user.DateOfBirth.ToString("yyyy-MM-dd"))
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authenticationSettings.JwtKey));

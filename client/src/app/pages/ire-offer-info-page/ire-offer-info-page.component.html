@@ -1,0 +1,69 @@
+
+<app-ire-topbar></app-ire-topbar>
+
+
+<div class="hero is-success is-large" style="background-image: url({{ frontImage }}); background-repeat: no-repeat; background-size: cover; background-position: center">
+    <div class="hero-body">
+        <div class="container">
+        </div>
+    </div>
+</div>
+<!--  /HELLO BANNER  -->
+
+<!--  CONTENT  -->
+<div class="container">
+    <div class="my-margin">
+        <div class="columns">
+            <div class="column"><p class="subtitle"> Area: <strong>{{ offer.area }}m2</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-bed"></i> <strong>{{ offer.bedrooms }}</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-bath"></i> <strong>{{ offer.bathrooms }}</strong></p></div>
+        </div>
+    </div>
+    <hr class="my-solid-divider">
+</div>
+
+<div class="container">
+    <h1 class="title">{{ offer.title }}</h1>
+</div>
+
+<div class="container mt-5">
+    <h2 class="subtitle">Description</h2>
+    <p>{{ offer.description }}</p>
+</div>
+
+<div class="container mt-5">
+    <h2 class="subtitle">Details</h2>
+    <table class="table is-fullwidth">
+        <tbody>
+        <tr>
+            <td>Address:</td>
+            <td>{{ offer.address }}</td>
+            <td>Area:</td>
+            <td>{{ offer.area }} m2</td>
+        </tr>
+        <tr>
+            <td>Bedrooms:</td>
+            <td>{{ offer.bedrooms }}</td>
+            <td>Bathrooms:</td>
+            <td>{{ offer.bathrooms }}</td>
+        </tr>
+        <tr>
+            <td>Price:</td>
+            <td>{{ offer.price }} $</td>
+            <td></td>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="container mt-5">
+    <h3 class="subtitle">Gallery</h3>
+    <div class="my-gallery">
+
+        <div *ngFor="let image of offer.images" class="my-gallery-object">
+            <img class="my-gallery-img is-4by3" src="https://localhost:7201/images/{{ image.identifier }}" alt="">
+        </div>
+
+    </div>
+</div>
+
+<app-ire-footer></app-ire-footer>

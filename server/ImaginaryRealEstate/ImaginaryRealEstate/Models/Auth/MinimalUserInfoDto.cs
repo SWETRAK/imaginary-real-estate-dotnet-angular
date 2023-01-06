@@ -1,6 +1,6 @@
 namespace ImaginaryRealEstate.Models.Auth;
 
-public class MinimalUserInfo
+public class MinimalUserInfoDto
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }

@@ -1,0 +1,14 @@
+<div class="my-container">
+    <div class="my-center">
+        <div class="card" style="width: 100%">
+            <div class="card-content">
+                <p class="title">Logout</p>
+                <div class="content">
+                    <p>Do you wanna log out user {{this.user.firstName}} {{this.user.lastName}}</p>
+                    <button (click)="logout()" class="button is-danger is-fullwidth mt-3">Logout</button>
+                    <a routerLink="/home" routerLinkActive="active" class="button is-primary is-fullwidth mt-3">Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

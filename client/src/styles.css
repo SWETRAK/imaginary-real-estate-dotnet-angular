@@ -1,1 +1,204 @@
 /* You can add global styles to this file, and also import other style files */
+.my-halfwidth {
+    width: 50%;
+}
+
+.my-margin {
+    margin: 10px 10px;
+}
+
+.my-margin-10-0 {
+    margin: 10px 0px;
+}
+
+.my-solid-divider {
+    border-top: 1px solid #bbb;
+}
+
+.my-gallery {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 1%;
+    flex-wrap: wrap;
+}
+
+.my-gallery-object {
+    width: 19%
+}
+
+.my-gallery-img {
+    width: 100%;
+}
+
+.my-media-content {
+    width: 54%;
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+}
+
+.my-city-gallery {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    column-gap: 10px;
+    row-gap: 10px;
+    flex-wrap: wrap;
+}
+
+.my-city-gallery-object {
+    width: 32%;
+    height: 300px;
+    background-size: cover;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.my-card-content {
+    padding: 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: nowrap;
+}
+
+.my-media {
+    width: 44%;
+}
+
+.my-400x300 {
+    width: 100%;
+}
+
+.my-400x300 > img {
+    width: 100%;
+}
+
+.my-notifications {
+    position: absolute;
+    padding: 5px 5px;
+    width: 300px;
+    min-height: 100px;
+    right: 0;
+    top: 70px;
+    z-index: 1;
+}
+
+.my-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.my-center {
+    width: 550px;
+    height: 550px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.my-error-image {
+    max-width: 500px;
+    max-height: 500px;
+}
+
+.my-error-message {
+    text-align: center;
+}
+
+.my-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 7; /* number of lines to show */
+    line-clamp: 7;
+    -webkit-box-orient: vertical;
+}
+
+@media only screen and (min-width: 501px) and (max-width: 900px) {
+    .my-gallery-object {
+        width: 32%;
+    }
+
+    .my-city-gallery-object {
+        width: 48%;
+    }
+
+    .my-center {
+        width: 300px;
+        height: 300px;
+    }
+
+    .my-card-content {
+        flex-wrap: wrap;
+    }
+
+    .my-media {
+        width: 100%;
+        object-fit: cover;
+    }
+
+    .my-400x300 {
+        width: 100%;
+    }
+
+    .my-400x300 > img {
+        width: 100%;
+    }
+
+    .my-media-content {
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+
+    .my-card-content {
+        flex-wrap: wrap;
+    }
+    .my-media {
+        width: 100%;
+    }
+
+    .my-card-content {
+        width: 100%;
+    }
+
+    .my-gallery-object {
+        width: 100%;
+    }
+
+    .my-city-gallery-object {
+        width: 100%;
+    }
+
+    .my-center {
+        width: 300px;
+        height: 300px;
+    }
+
+    .my-400x300 {
+        width: 100%;
+    }
+
+    .my-media-content {
+        width: 100%;
+    }
+
+}
+
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

@@ -1,0 +1,19 @@
+<app-ire-topbar></app-ire-topbar>
+
+<section class="hero is-warning is-medium" style="background-image: url(/assets/img/pexelsOffersBackground.jpg); background-size: cover; background-position: center">
+    <div class="hero-body">
+        <div class="container">
+            <h1 class="title has-text-white has-text-weight-bold">
+                Yours favourite places
+            </h1>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <app-ire-offer-baner *ngFor="let offer of offersList" [offer]="offer" [liked]="true" (likeChange)="statusChanged()"></app-ire-offer-baner>
+</div>
+
+<app-ire-footer></app-ire-footer>
+
+

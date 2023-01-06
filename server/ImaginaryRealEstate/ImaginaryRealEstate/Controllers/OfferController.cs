@@ -21,18 +21,23 @@ public class OfferController : Controller
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<OfferResultDto>> GetAllOffers([FromBody] OfferSearchIncomingDto searchIncomingDto)
+    public ActionResult<IEnumerable<OfferResultDto>> GetAllOffers()
     {
-        var result = _offerService.GetOffers(searchIncomingDto);
-        
+        var result = _offerService.GetOffers();
         return Ok(result);
     }
     
-    [HttpGet("{identifier}")]
+    [HttpGet("{address}")]
+    public ActionResult<IEnumerable<OfferResultDto>> GetOffersByAddress([FromRoute] string address)
+    {
+        var result = _offerService.GetOffersByAddress(address);
+        return Ok(result);
+    }
+    
+    [HttpGet("details/{identifier}")]
     public ActionResult<OfferResultDto> GetById([FromRoute] string identifier)
     {
         var result = _offerService.GetOfferById(identifier);
-        
         return Ok(result);
     }
 
@@ -42,8 +47,17 @@ public class OfferController : Controller
     {
         var userId = AuthenticationHelper.GetUserId(this.User);
         var result = _offerService.CreateOffer(newOfferDto, userId);
-        
         return Created($"/offers/{result.Identifier}", result);
+    }
+    
+    [Authorize(Roles = $"{Roles.Author},{Roles.Admin}")]
+    [HttpDelete("{guideId}")]
+    public ActionResult Delete([FromRoute] string guideId)
+    {
+        var userId = AuthenticationHelper.GetUserId(this.User);
+        var result = _offerService.DeleteOffer(guideId, userId);
+
+        return NoContent();
     }
     
     [Authorize]
@@ -55,7 +69,7 @@ public class OfferController : Controller
 
         return result;
     }
-    
+
     [Authorize]
     [HttpPost("{offerId}/unlike")]
     public ActionResult<bool> UnlikeOffer([FromRoute] string offerId)
@@ -65,6 +79,4 @@ public class OfferController : Controller
 
         return Ok(result);
     }
-    
-    
 }
