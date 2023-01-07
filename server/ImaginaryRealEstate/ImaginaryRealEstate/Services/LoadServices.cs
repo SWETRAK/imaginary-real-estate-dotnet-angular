@@ -6,6 +6,7 @@ public static class LoadServices
 {
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
+
         services.AddScoped<IS3Service, S3Service>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IOfferService, OfferService>();

@@ -4,6 +4,7 @@ using Amazon.S3.Model;
 using Amazon.S3.Transfer;
 using Amazon.S3.Util;
 using ImaginaryRealEstate.Services.Interfaces;
+using ImaginaryRealEstate.Settings;
 
 namespace ImaginaryRealEstate.Services;
 
@@ -15,14 +16,19 @@ public class S3Service : IS3Service
 {
     private readonly IAmazonS3 _s3Client;
     private readonly ILogger<S3Service> _logger;
+    private readonly AwsS3Setting _s3Setting;
     
-    public S3Service(ILogger<S3Service> logger)
+    public S3Service(
+        ILogger<S3Service> logger,
+        AwsS3Setting awsS3Setting
+        )
     {
         _logger = logger;
+        _s3Setting = awsS3Setting;
         _s3Client = new AmazonS3Client(
-            "AKIATIW5P454BGIVVDLH",
-            "B4Y5rrFCem5AJup6wm9gFkLkhQeCZbeAeSnviaiD",
-            RegionEndpoint.GetBySystemName("eu-west-3")
+            _s3Setting.AwsAccessKeyId,
+            _s3Setting.AwsSecretAccessKey,
+            RegionEndpoint.GetBySystemName(_s3Setting.AwsLocale)
         );
     }
 
