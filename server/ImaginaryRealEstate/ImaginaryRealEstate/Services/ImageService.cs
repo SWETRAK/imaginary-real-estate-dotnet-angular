@@ -15,7 +15,7 @@ public class ImageService: IImageService
     private readonly IS3Service _s3Service;
     private readonly AwsS3Setting _s3Setting;
 
-    public ImageService(
+    public ImageService( 
         DomainDbContext dbContext, 
         ILogger<ImageService> logger, 
         IMapper mapper, 
@@ -55,6 +55,7 @@ public class ImageService: IImageService
         stream.CopyTo(memoryStream);
         _s3Service.UploadFile(_s3Setting.AwsBucketName, memoryStream, contentType, imageEntity.FileName);
         _dbContext.SaveChanges();
+        _logger.LogInformation("Photo with {} id and {} aws key was uploaded", imageEntity.Id, imageEntity.FileName);
         
         var result = _mapper.Map<ImageOfferResultDto>(imageEntity);
         return result;
@@ -66,6 +67,7 @@ public class ImageService: IImageService
 
         var image = _dbContext.Images.FirstOrDefault(i => i.Id == imageIdGuid);
         if (image == null) throw new OfferNotFountException();
+        this._logger.LogInformation("Photo with {} id was downloaded", image.Id);
 
         var response = await _s3Service.GetFile(_s3Setting.AwsBucketName, image.FileName);
         return response;
