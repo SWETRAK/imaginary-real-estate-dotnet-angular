@@ -2,10 +2,9 @@ namespace ImaginaryRealEstate.Entities;
 
 public class Image
 {
-    public Guid Id { get; set; }
+    public string Id { get; set; }
     
-    public Guid OfferId { get; set; }
-    public virtual Offer Offer { get; set; }
+    public Offer Offer { get; set; }
 
     public string FileName { get; set; }
 

@@ -36,7 +36,6 @@ public class UserController : Controller
     public ActionResult<UserInfoDto> GetUserInfo()
     {
         var userId = AuthenticationHelper.GetUserId(this.User);
-
         var result = _userService.GetUserInfo(userId);
         return Ok(result);
     }
@@ -49,13 +48,13 @@ public class UserController : Controller
         var result = _userService.GetLikedOffers(userId);
         return Ok(result);
     }
-
+    
     [Authorize(Roles = $"{Roles.Author},{Roles.Admin}")]
     [HttpGet("listed")]
     public ActionResult<IEnumerable<OfferResultDto>> GetListedOffers()
     {
         var userId = AuthenticationHelper.GetUserId(this.User);
-
+    
         var result = _userService.GetListedOffers(userId);
         return Ok(result);
     }

@@ -5,7 +5,6 @@ using AutoMapper;
 using ImaginaryRealEstate.Authentication;
 using ImaginaryRealEstate.Entities;
 using ImaginaryRealEstate.Exceptions.Auth;
-using ImaginaryRealEstate.Exceptions.Offer;
 using ImaginaryRealEstate.Models.Auth;
 using ImaginaryRealEstate.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -38,9 +37,8 @@ public class AuthService : IAuthService
 
     public (UserInfoDto, string) GetUserInfo(string guideId)
     {
-        if (!Guid.TryParse(guideId, out var guideIdGuid)) throw new NoGuidException();
 
-        var user = _dbContext.Users.FirstOrDefault(u => u.Id == guideIdGuid);
+        var user = _dbContext.Users.FirstOrDefault(u => u.Id == guideId);
         
         if (user is null) throw new InvalidLoginDataException();
         
@@ -58,7 +56,6 @@ public class AuthService : IAuthService
         newUser.HashPassword = hashedPassword;
 
         _dbContext.Users.Add(newUser);
-        _dbContext.SaveChanges();
         _logger.LogInformation("User created with {NewUserEmail} at {S}", newUser.Email, DateTime.Now.ToString("yyyy-MMMM-dd h:mm:ss tt zz"));
 
         var userInfoDto = _mapper.Map<UserInfoDto>(newUser);

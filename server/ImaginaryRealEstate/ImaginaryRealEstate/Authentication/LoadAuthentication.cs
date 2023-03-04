@@ -1,7 +1,9 @@
+using System.Runtime.CompilerServices;
 using System.Text;
 using ImaginaryRealEstate.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using MongoFramework;
 
 namespace ImaginaryRealEstate.Authentication;
 
@@ -15,8 +17,11 @@ public static class LoadAuthentication
         var authenticationSettings = new AuthenticationSettings();
         configuration.GetSection("Authentication").Bind(authenticationSettings);
 
-        var awsS3Settings = new AwsS3Setting();
-        configuration.GetSection("AwsS3Config").Bind(awsS3Settings);
+        var minioSetting = new MinioSetting();
+        configuration.GetSection("MinIO").Bind(minioSetting);
+
+        var mongoSetting = new MongoSetting();
+        configuration.GetSection("ConnectionStrings").Bind(mongoSetting);
         
         services
             .AddAuthentication(options =>
@@ -52,7 +57,10 @@ public static class LoadAuthentication
             });
 
         services.AddSingleton<AuthenticationSettings>(authenticationSettings);
-        services.AddSingleton<AwsS3Setting>(awsS3Settings);
+        services.AddSingleton<MinioSetting>(minioSetting);
+        
+        builder.Services.AddSingleton<IMongoDbConnection>(
+            MongoDbConnection.FromConnectionString(mongoSetting.ConnectionString));
         return services;
     }
 }

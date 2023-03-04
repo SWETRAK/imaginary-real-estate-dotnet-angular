@@ -14,8 +14,8 @@ public class RegisterUserWithPasswordDtoValidator: AbstractValidator<RegisterUse
             .NotEmpty()
             .Custom((value, context) =>
             {
-                var user = dbContext.Users.Any(x => x.Email == value.ToLower());
-                if (user) context.AddFailure("Email", "That email is taken");
+                var user = dbContext.Users.FirstOrDefault(u => u.Email == value);
+                if (user is not null) context.AddFailure("Email", "That email is taken");
             });
 
         RuleFor(x => x.Password)

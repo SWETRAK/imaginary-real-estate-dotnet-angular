@@ -45,19 +45,13 @@ public class OfferService : IOfferService
         return _mapper.Map<List<OfferResultDto>>(offerFromDatabase);
     }
 
-    public OfferResultDto GetOfferById(string identifier)
+    public OfferResultDto GetOfferById(string idString)
     {
-        if (!Guid.TryParse(identifier, out var id))
-        {
-            _logger.LogError("Given identifier \"{}\" can not be parsed as Guid", identifier);
-            throw new NoGuidException();
-        }
-        
         var offerById = _dbContext.Offers
             .Include(i => i.Images)
             .Include(i => i.Author)
             .Include(i => i.Likes)
-            .FirstOrDefault(w => w.Id == id);
+            .FirstOrDefault(w => w.Id == idString);
         
         if (offerById == null) throw new OfferNotFountException();
         
@@ -65,15 +59,10 @@ public class OfferService : IOfferService
         return result;
     }
 
-    public OfferResultDto CreateOffer(NewOfferIncomingDto incomingDto, string userId)
+    public OfferResultDto CreateOffer(NewOfferIncomingDto incomingDto, string userIdString)
     {
-        if (!Guid.TryParse(userId, out var userIdGuid))
-        {
-            _logger.LogError("Given identifier \"{}\" can not be parsed as Guid", userId);
-            throw new NoGuidException();
-        }
 
-        var user = _dbContext.Users.FirstOrDefault(u => u.Id == userIdGuid);
+        var user = _dbContext.Users.FirstOrDefault(u => u.Id == userIdString);
         if (user == null) throw new OfferNotFountException();
         
         var offer = _mapper.Map<Offer>(incomingDto);
@@ -84,12 +73,9 @@ public class OfferService : IOfferService
         return result;
     }
 
-    public bool DeleteOffer(string offerId, string userId)
+    public bool DeleteOffer(string offerIdString, string userIdString)
     {
-        if (!Guid.TryParse(offerId, out var offerIdGuid)) throw new NoGuidException();
-        if (!Guid.TryParse(userId, out var userIdGuid)) throw new NoGuidException();
-
-        var guid = _dbContext.Offers.FirstOrDefault(o => o.Author.Id == userIdGuid && o.Id == offerIdGuid);
+        var guid = _dbContext.Offers.FirstOrDefault(o => o.Author.Id == userIdString && o.Id == offerIdString);
         if (guid == null) throw new OfferNotFountException();
 
         _dbContext.Offers.Remove(guid);
@@ -97,29 +83,19 @@ public class OfferService : IOfferService
         return true;
     }
 
-    public bool LikeOffer(string offerId, string userId)
+    public bool LikeOffer(string offerIdString, string userIdString)
     {
-        if (!Guid.TryParse(offerId, out var offerIdGuid))
-        {
-            _logger.LogError("Given identifier \"{}\" can not be parsed as Guid", offerId);
-            throw new NoGuidException();
-        }
-        
-        if (!Guid.TryParse(userId, out var userIdGuid))
-        {
-            _logger.LogError("Given identifier \"{}\" can not be parsed as Guid", userId);
-            throw new NoGuidException();
-        }
-
         var offer = _dbContext.Offers
             .Include(o => o.Likes)
-            .FirstOrDefault(o => o.Id == offerIdGuid);
+            .FirstOrDefault(o => o.Id == offerIdString);
+        
         var user = _dbContext.Users
             .Include(u => u.LikedOffers)
-            .FirstOrDefault(u => u.Id == userIdGuid);
+            .FirstOrDefault(u => u.Id == userIdString);
 
-        if (offer == null) throw new OfferNotFountException();
-        if (user == null) throw new OfferNotFountException();
+
+        if (offer is null) throw new OfferNotFountException();
+        if (user is null) throw new OfferNotFountException();
         
         offer.Likes = offer.Likes.Append(user).ToList();
         user.LikedOffers = user.LikedOffers.Append(offer).ToList();
@@ -131,29 +107,17 @@ public class OfferService : IOfferService
         return true;
     }
     
-    public bool UnLikeOffer(string offerId, string userId)
+    public bool UnLikeOffer(string offerIdString, string userIdString)
     {
-        if (!Guid.TryParse(offerId, out var offerIdGuid))
-        {
-            _logger.LogError("Given identifier \"{}\" can not be parsed as Guid", offerId);
-            throw new NoGuidException();
-        }
-        
-        if (!Guid.TryParse(userId, out var userIdGuid))
-        {
-            _logger.LogError("Given identifier \"{}\" can not be parsed as Guid", userId);
-            throw new NoGuidException();
-        }
-
         var offer = _dbContext.Offers
             .Include(o => o.Likes)
-            .FirstOrDefault(o => o.Id == offerIdGuid);
+            .FirstOrDefault(o => o.Id == offerIdString);
         var user = _dbContext.Users
             .Include(u => u.LikedOffers)
-            .FirstOrDefault(u => u.Id == userIdGuid);
+            .FirstOrDefault(u => u.Id == userIdString);
 
-        if (offer == null) throw new OfferNotFountException();
-        if (user == null) throw new OfferNotFountException();
+        if (offer is null) throw new OfferNotFountException();
+        if (user is null) throw new OfferNotFountException();
 
         offer.Likes = offer.Likes.Where(u => u.Id != user.Id).ToList();
         user.LikedOffers = user.LikedOffers.Where(o => o.Id != offer.Id).ToList();
