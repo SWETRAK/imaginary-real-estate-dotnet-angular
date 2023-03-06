@@ -1,8 +1,10 @@
+using MongoDB.Bson;
+
 namespace ImaginaryRealEstate.Entities;
 
 public class User
 {
-    public string Id { get; set; }
+    public ObjectId Id { get; set; }
     public string Email { get; set; }
     public string HashPassword { get; set; }
     

@@ -1,10 +1,10 @@
 using ImaginaryRealEstate;
 using ImaginaryRealEstate.Authentication;
 using ImaginaryRealEstate.Authorization;
+using ImaginaryRealEstate.Database;
 using ImaginaryRealEstate.Middlewares;
 using ImaginaryRealEstate.Services;
 using ImaginaryRealEstate.Validators;
-using MongoFramework;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Logging.AddMyLogger();
 
 // Database Context
-builder.Services.AddSingleton<DomainDbContext>();
+builder.Services.AddMongoDatabase(builder);
+
 // Authorization
 builder.Services.AddAuthorizationCustom();
 

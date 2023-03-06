@@ -3,12 +3,16 @@ using System.Security.Claims;
 using System.Text;
 using AutoMapper;
 using ImaginaryRealEstate.Authentication;
+using ImaginaryRealEstate.Database;
+using ImaginaryRealEstate.Database.Interfaces;
 using ImaginaryRealEstate.Entities;
 using ImaginaryRealEstate.Exceptions.Auth;
+using ImaginaryRealEstate.Exceptions.Offer;
 using ImaginaryRealEstate.Models.Auth;
 using ImaginaryRealEstate.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using MongoDB.Bson;
 
 namespace ImaginaryRealEstate.Services;
 
@@ -17,29 +21,28 @@ public class AuthService : IAuthService
     private readonly ILogger<AuthService> _logger;
     private readonly IPasswordHasher<User> _passwordHasher;
     private readonly AuthenticationSettings _authenticationSettings;
-    private readonly DomainDbContext _dbContext;
     private readonly IMapper _mapper;
+
+    private readonly IUserRepository _userRepository;
 
     public AuthService(
         ILogger<AuthService> logger, 
         IPasswordHasher<User> passwordHasher,
         AuthenticationSettings authenticationSettings,
-        DomainDbContext dbContext,
-        IMapper mapper
-        )
+        IMapper mapper, 
+        IUserRepository userRepository)
     {
         _logger = logger;
         _passwordHasher = passwordHasher;
         _authenticationSettings = authenticationSettings;
-        _dbContext = dbContext;
         _mapper = mapper;
+        _userRepository = userRepository;
     }
 
-    public (UserInfoDto, string) GetUserInfo(string guideId)
+    public async Task<(UserInfoDto, string)> GetUserInfo(string guideId)
     {
-
-        var user = _dbContext.Users.FirstOrDefault(u => u.Id == guideId);
-        
+        if (!ObjectId.TryParse(guideId, out var guideObjectId)) throw new NoGuidException();
+        var user = await _userRepository.GetById(guideObjectId); 
         if (user is null) throw new InvalidLoginDataException();
         
         var token = GenerateJwtToken(user);
@@ -48,14 +51,14 @@ public class AuthService : IAuthService
         return (userInfoDto, token);
     }
 
-    public (UserInfoDto, string) CreateUser(RegisterUserWithPasswordDto registerUserWithPasswordDto )
+    public async Task<(UserInfoDto, string)> CreateUser(RegisterUserWithPasswordDto registerUserWithPasswordDto )
     {
         var newUser = _mapper.Map<User>(registerUserWithPasswordDto);
 
         var hashedPassword = _passwordHasher.HashPassword(newUser, registerUserWithPasswordDto.Password);
         newUser.HashPassword = hashedPassword;
 
-        _dbContext.Users.Add(newUser);
+        await _userRepository.Insert(newUser);
         _logger.LogInformation("User created with {NewUserEmail} at {S}", newUser.Email, DateTime.Now.ToString("yyyy-MMMM-dd h:mm:ss tt zz"));
 
         var userInfoDto = _mapper.Map<UserInfoDto>(newUser);
@@ -65,11 +68,9 @@ public class AuthService : IAuthService
         return (userInfoDto, token);
     }
     
-    public (UserInfoDto, string) LoginUser(LoginUserWithPasswordDto userDto)
+    public async Task<(UserInfoDto, string)> LoginUser(LoginUserWithPasswordDto userDto)
     {
-        var user = _dbContext
-            .Users
-            .FirstOrDefault(u => u.Email == userDto.Email);
+        var user = await _userRepository.GetByEmail(userDto.Email);
 
         if (user is null) throw new InvalidLoginDataException();
 

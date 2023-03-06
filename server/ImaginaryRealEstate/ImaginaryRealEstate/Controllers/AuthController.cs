@@ -21,10 +21,10 @@ public class AuthController: Controller
 
     [HttpGet]
     [Authorize]
-    public ActionResult<UserInfoDto> CheckUserResult()
+    public async Task<ActionResult<UserInfoDto>> CheckUserResult()
     {
         var userId = AuthenticationHelper.GetUserId(this.User);
-        var loginResult = _authService.GetUserInfo(userId);
+        var loginResult = await _authService.GetUserInfo(userId);
         
         Response.Cookies.Append(
             "X-Access-Token", 
@@ -40,9 +40,9 @@ public class AuthController: Controller
     }
 
     [HttpPost("login")]
-    public ActionResult<UserInfoDto> LoginUserWithPassword([FromBody] LoginUserWithPasswordDto loginDto)
+    public async Task<ActionResult<UserInfoDto>> LoginUserWithPassword([FromBody] LoginUserWithPasswordDto loginDto)
     {
-        var loginResult = _authService.LoginUser(loginDto);
+        var loginResult = await _authService.LoginUser(loginDto);
         
         Response.Cookies.Append(
             "X-Access-Token", 
@@ -57,9 +57,9 @@ public class AuthController: Controller
     }
 
     [HttpPost("register")]
-    public ActionResult<UserInfoDto> RegisterUserWithPassword([FromBody] RegisterUserWithPasswordDto registerDto)
+    public async Task<ActionResult<UserInfoDto>> RegisterUserWithPassword([FromBody] RegisterUserWithPasswordDto registerDto)
     {
-        var registerResult = _authService.CreateUser(registerDto);
+        var registerResult = await _authService.CreateUser(registerDto);
         
         Response.Cookies.Append(
             "X-Access-Token", 

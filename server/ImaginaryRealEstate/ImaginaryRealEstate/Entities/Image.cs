@@ -1,10 +1,13 @@
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace ImaginaryRealEstate.Entities;
 
 public class Image
 {
-    public string Id { get; set; }
-    
-    public Offer Offer { get; set; }
+    public ObjectId Id { get; set; }
+
+    public virtual Offer Offer { get; set; }
 
     public string FileName { get; set; }
 

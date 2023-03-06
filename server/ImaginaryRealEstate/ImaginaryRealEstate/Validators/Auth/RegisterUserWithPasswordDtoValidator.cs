@@ -1,20 +1,22 @@
 using AgeCalculator;
 using FluentValidation;
 using ImaginaryRealEstate.Consts;
+using ImaginaryRealEstate.Database;
+using ImaginaryRealEstate.Database.Interfaces;
 using ImaginaryRealEstate.Models.Auth;
 
 namespace ImaginaryRealEstate.Validators.Auth;
 
 public class RegisterUserWithPasswordDtoValidator: AbstractValidator<RegisterUserWithPasswordDto>
 {
-    public RegisterUserWithPasswordDtoValidator(DomainDbContext dbContext)
+    public RegisterUserWithPasswordDtoValidator(IUserRepository userRepository)
     {
         RuleFor(x => x.Email)
             .EmailAddress()
             .NotEmpty()
-            .Custom((value, context) =>
+            .Custom(async (value, context) =>
             {
-                var user = dbContext.Users.FirstOrDefault(u => u.Email == value);
+                var user = await userRepository.GetByEmail(value);
                 if (user is not null) context.AddFailure("Email", "That email is taken");
             });
 

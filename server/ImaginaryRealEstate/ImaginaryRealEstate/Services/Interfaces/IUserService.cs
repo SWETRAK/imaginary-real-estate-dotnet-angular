@@ -6,8 +6,8 @@ namespace ImaginaryRealEstate.Services.Interfaces;
 
 public interface IUserService
 {
-    UserInfoDto ChangePassword(ChangePasswordDto changePasswordDto, string userIdString);
-    UserInfoDto GetUserInfo(string userIdString);
-    IEnumerable<OfferResultDto> GetLikedOffers(string userIdString);
-    IEnumerable<OfferResultDto> GetListedOffers(string userIdString);
+    Task<UserInfoDto> ChangePassword(ChangePasswordDto changePasswordDto, string userIdString);
+    Task<UserInfoDto> GetUserInfo(string userIdString);
+    Task<IEnumerable<OfferResultDto>> GetLikedOffers(string userIdString);
+    Task<IEnumerable<OfferResultDto>> GetListedOffers(string userIdString);
 }

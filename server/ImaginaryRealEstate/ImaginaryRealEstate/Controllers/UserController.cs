@@ -24,38 +24,37 @@ public class UserController : Controller
 
     [Authorize]
     [HttpPut("update/password")]
-    public ActionResult<UserInfoDto> UpdatePassword([FromBody] ChangePasswordDto changePasswordDto)
+    public async Task<ActionResult<UserInfoDto>> UpdatePassword([FromBody] ChangePasswordDto changePasswordDto)
     {
         var userId = AuthenticationHelper.GetUserId(this.User);
-        var result = _userService.ChangePassword(changePasswordDto, userId);
+        var result = await _userService.ChangePassword(changePasswordDto, userId);
         return Ok(result);
     }
 
     [Authorize]
     [HttpGet("info")]
-    public ActionResult<UserInfoDto> GetUserInfo()
+    public async Task<ActionResult<UserInfoDto>> GetUserInfo()
     {
         var userId = AuthenticationHelper.GetUserId(this.User);
-        var result = _userService.GetUserInfo(userId);
+        var result = await _userService.GetUserInfo(userId);
         return Ok(result);
     }
     
     [Authorize]
     [HttpGet("liked")]
-    public ActionResult<IEnumerable<OfferResultDto>> GetUserLiked()
+    public async  Task<ActionResult<IEnumerable<OfferResultDto>>> GetUserLiked()
     {
         var userId = AuthenticationHelper.GetUserId(this.User);
-        var result = _userService.GetLikedOffers(userId);
+        var result = await _userService.GetLikedOffers(userId);
         return Ok(result);
     }
     
     [Authorize(Roles = $"{Roles.Author},{Roles.Admin}")]
     [HttpGet("listed")]
-    public ActionResult<IEnumerable<OfferResultDto>> GetListedOffers()
+    public async Task<ActionResult<IEnumerable<OfferResultDto>>> GetListedOffers()
     {
         var userId = AuthenticationHelper.GetUserId(this.User);
-    
-        var result = _userService.GetListedOffers(userId);
+        var result = await _userService.GetListedOffers(userId);
         return Ok(result);
     }
 }

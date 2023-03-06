@@ -28,55 +28,55 @@ public class OfferController : Controller
     }
     
     [HttpGet("{address}")]
-    public ActionResult<IEnumerable<OfferResultDto>> GetOffersByAddress([FromRoute] string address)
+    public async Task<ActionResult<IEnumerable<OfferResultDto>>> GetOffersByAddress([FromRoute] string address)
     {
-        var result = _offerService.GetOffersByAddress(address);
+        var result = await _offerService.GetOffersByAddress(address);
         return Ok(result);
     }
     
     [HttpGet("details/{identifier}")]
-    public ActionResult<OfferResultDto> GetById([FromRoute] string identifier)
+    public async Task<ActionResult<OfferResultDto>> GetById([FromRoute] string identifier)
     {
-        var result = _offerService.GetOfferById(identifier);
+        var result = await _offerService.GetOfferById(identifier);
         return Ok(result);
     }
 
     [Authorize(Roles = $"{Roles.Author},{Roles.Admin}")]
     [HttpPost]
-    public ActionResult<OfferResultDto> Create([FromBody] NewOfferIncomingDto newOfferDto)
+    public async Task<ActionResult<OfferResultDto>> Create([FromBody] NewOfferIncomingDto newOfferDto)
     {
         var userId = AuthenticationHelper.GetUserId(this.User);
-        var result = _offerService.CreateOffer(newOfferDto, userId);
+        var result = await _offerService.CreateOffer(newOfferDto, userId);
         return Created($"/offers/{result.Identifier}", result);
     }
     
     [Authorize(Roles = $"{Roles.Author},{Roles.Admin}")]
     [HttpDelete("{guideId}")]
-    public ActionResult Delete([FromRoute] string guideId)
+    public async Task<ActionResult> Delete([FromRoute] string guideId)
     {
         var userId = AuthenticationHelper.GetUserId(this.User);
-        var result = _offerService.DeleteOffer(guideId, userId);
+        var result = await _offerService.DeleteOffer(guideId, userId);
 
         return NoContent();
     }
     
-    [Authorize]
-    [HttpPost("{offerId}/like")]
-    public ActionResult<bool> LikeOffer([FromRoute] string offerId)
-    {
-        var userId = AuthenticationHelper.GetUserId(this.User);
-        var result = _offerService.LikeOffer(offerId, userId);
-
-        return result;
-    }
-
-    [Authorize]
-    [HttpPost("{offerId}/unlike")]
-    public ActionResult<bool> UnlikeOffer([FromRoute] string offerId)
-    {
-        var userId = AuthenticationHelper.GetUserId(this.User);
-        var result = _offerService.UnLikeOffer(offerId, userId);
-
-        return Ok(result);
-    }
+    // [Authorize]
+    // [HttpPost("{offerId}/like")]
+    // public ActionResult<bool> LikeOffer([FromRoute] string offerId)
+    // {
+    //     var userId = AuthenticationHelper.GetUserId(this.User);
+    //     var result = _offerService.LikeOffer(offerId, userId);
+    //
+    //     return result;
+    // }
+    //
+    // [Authorize]
+    // [HttpPost("{offerId}/unlike")]
+    // public ActionResult<bool> UnlikeOffer([FromRoute] string offerId)
+    // {
+    //     var userId = AuthenticationHelper.GetUserId(this.User);
+    //     var result = _offerService.UnLikeOffer(offerId, userId);
+    //
+    //     return Ok(result);
+    // }
 }

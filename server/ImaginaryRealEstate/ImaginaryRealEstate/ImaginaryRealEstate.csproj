@@ -25,10 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Database\Services" />
-      <Folder Include="Database\Settings" />
       <Folder Include="Logs" />
-      <Folder Include="Migrations" />
     </ItemGroup>
 
     <ItemGroup>
