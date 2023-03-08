@@ -21,9 +21,9 @@ public class OfferController : Controller
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<OfferResultDto>> GetAllOffers()
+    public async Task<ActionResult<IEnumerable<OfferResultDto>>> GetAllOffers()
     {
-        var result = _offerService.GetOffers();
+        var result = await _offerService.GetOffers();
         return Ok(result);
     }
     
@@ -60,23 +60,23 @@ public class OfferController : Controller
         return NoContent();
     }
     
-    // [Authorize]
-    // [HttpPost("{offerId}/like")]
-    // public ActionResult<bool> LikeOffer([FromRoute] string offerId)
-    // {
-    //     var userId = AuthenticationHelper.GetUserId(this.User);
-    //     var result = _offerService.LikeOffer(offerId, userId);
-    //
-    //     return result;
-    // }
-    //
-    // [Authorize]
-    // [HttpPost("{offerId}/unlike")]
-    // public ActionResult<bool> UnlikeOffer([FromRoute] string offerId)
-    // {
-    //     var userId = AuthenticationHelper.GetUserId(this.User);
-    //     var result = _offerService.UnLikeOffer(offerId, userId);
-    //
-    //     return Ok(result);
-    // }
+    [Authorize]
+    [HttpPost("{offerId}/like")]
+    public async Task<ActionResult<bool>> LikeOffer([FromRoute] string offerId)
+    {
+        var userId = AuthenticationHelper.GetUserId(this.User);
+        var result = await _offerService.LikeOffer(offerId, userId);
+    
+        return Ok(result);
+    }
+    
+    [Authorize]
+    [HttpPost("{offerId}/unlike")]
+    public async Task<ActionResult<bool>> UnlikeOffer([FromRoute] string offerId)
+    {
+        var userId = AuthenticationHelper.GetUserId(this.User);
+        var result = await _offerService.UnLikeOffer(offerId, userId);
+    
+        return Ok(result);
+    }
 }

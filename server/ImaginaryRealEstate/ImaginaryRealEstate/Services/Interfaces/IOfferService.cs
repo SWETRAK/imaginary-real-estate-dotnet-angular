@@ -9,6 +9,6 @@ public interface IOfferService
     Task<OfferResultDto> GetOfferById(string idString);
     Task<OfferResultDto> CreateOffer(NewOfferIncomingDto incomingDto, string userIdString);
     Task<bool> DeleteOffer(string offerIdString, string userIdString);
-    // bool LikeOffer(string offerId, string userId);
-    // bool UnLikeOffer(string offerId, string userId);
+    Task<bool> LikeOffer(string offerId, string userId);
+    Task<bool> UnLikeOffer(string offerId, string userId);
 }

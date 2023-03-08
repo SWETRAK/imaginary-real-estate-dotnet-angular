@@ -9,6 +9,8 @@ public interface IUserRepository
 
     Task<User> GetByEmail(string email);
 
+    Task<IEnumerable<User>> GetManyByIds(IEnumerable<ObjectId> usersIds);
+
     Task Insert(User user);
 
     Task Update(User user);

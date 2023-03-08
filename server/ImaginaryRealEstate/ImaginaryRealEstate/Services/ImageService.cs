@@ -1,5 +1,4 @@
 using AutoMapper;
-using ImaginaryRealEstate.Database;
 using ImaginaryRealEstate.Database.Interfaces;
 using ImaginaryRealEstate.Entities;
 using ImaginaryRealEstate.Exceptions.Offer;
@@ -42,10 +41,15 @@ public class ImageService: IImageService
         {
             FileName = Guid.NewGuid().ToString(),
             IsFrontPhoto = frontPhoto,
-            Offer = offer
+            OfferId = offer.Id.ToString()
         };
 
         await _imageRepository.Insert(imageEntity);
+        
+        Console.WriteLine(imageEntity.Id);
+        
+        offer.ImagesIds.Add(imageEntity.Id.ToString());
+        await _offerRepository.Update(offer);
 
         var contentType = file.ContentType;
         Console.Write(contentType);

@@ -25,6 +25,7 @@ public class AuthProfile: Profile
             .ForMember(u => u.Id, opt => opt.Ignore())
             .ForMember(u => u.HashPassword, opt => opt.Ignore())
             .ForMember(u => u.LikedOffers, opt => opt.Ignore())
+            .ForMember(u => u.LikedOffersIds, opt => opt.Ignore())
             .ForMember(u => u.Email, opt => opt.MapFrom(p => p.Email))
             .ForMember(u => u.FirstName, opt => opt.MapFrom(p => p.FirstName))
             .ForMember(u => u.LastName, opt => opt.MapFrom(p => p.LastName))

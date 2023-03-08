@@ -9,6 +9,7 @@ using ImaginaryRealEstate.Models.Users;
 using ImaginaryRealEstate.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Serializers;
 
 namespace ImaginaryRealEstate.Services;
 
@@ -18,17 +19,21 @@ public class UserService : IUserService
     private readonly IMapper _mapper;
     private readonly IPasswordHasher<User> _passwordHasher;
     private readonly IUserRepository _userRepository;
+    private readonly IImageRepository _imageRepository;
+    private readonly IOfferRepository _offerRepository;
 
     public UserService(
         IMapper mapper, 
         ILogger<UserService> logger, 
         IPasswordHasher<User> passwordHasher, 
-        IUserRepository userRepository)
+        IUserRepository userRepository, IImageRepository imageRepository, IOfferRepository offerRepository)
     {
         _mapper = mapper;
         _logger = logger;
         _passwordHasher = passwordHasher;
         _userRepository = userRepository;
+        _imageRepository = imageRepository;
+        _offerRepository = offerRepository;
     }
 
     public async Task<UserInfoDto> ChangePassword(ChangePasswordDto changePasswordDto, string userIdString)
@@ -67,32 +72,42 @@ public class UserService : IUserService
 
         var user = await _userRepository.GetById(userObjectId);
 
-        // _dbContext
-            // .Users
-            // .Include(u => u.LikedOffers)
-            // .ThenInclude(o => o.Images)
-            // .Include(u => u.LikedOffers)
-            // .ThenInclude(o => o.Author)
-            // .FirstOrDefault(u => u.Id == userIdString);
-            
         if (user == null) throw new OfferNotFountException();
-    
-        var result = _mapper.Map<IEnumerable<OfferResultDto>>(user.LikedOffers);
-        return result;
+        
+        var likedOffers =  new List<Offer>() {};
+
+        if (user.LikedOffersIds is not null)
+        {
+            likedOffers =
+                (await _offerRepository.GetManyByIds(user.LikedOffersIds.Select(id => ObjectId.Parse(id)).ToList()))
+                .ToList();
+            
+            foreach (var offer in likedOffers)
+            {
+                offer.Images = await _imageRepository.GetManyByIds(offer.ImagesIds.Select(id => ObjectId.Parse(id)).ToList());
+                if (offer.LikesIds is not null) offer.Likes = await _userRepository.GetManyByIds(offer.LikesIds.Select(id => ObjectId.Parse(id)).ToList());
+                offer.Author = await _userRepository.GetById(ObjectId.Parse(offer.AuthorId));
+            }
+        }
+        
+        user.LikedOffers = likedOffers;
+
+        return _mapper.Map<IEnumerable<OfferResultDto>>(user.LikedOffers);
     }
     
     public async Task<IEnumerable<OfferResultDto>> GetListedOffers(string userIdString)
     {
         if (!ObjectId.TryParse(userIdString, out var userObjectId)) throw new NoGuidException();
         
-        var offers = await _userRepository.GetById(userObjectId);
-            // _dbContext
-            // .Offers
-            // .Include(o => o.Author)
-            // .Include(o => o.Images)
-            // .Where(o => o.AuthorId == userIdString)
-            // .ToList();
-            //
+        var offers = await _offerRepository.GetManyByAuthorId(userObjectId);
+
+        foreach (var offer in offers)
+        {
+            offer.Images = await _imageRepository.GetManyByIds(offer.ImagesIds.Select(id => ObjectId.Parse(id)).ToList());
+            if (offer.LikesIds is not null) offer.Likes = await _userRepository.GetManyByIds(offer.LikesIds.Select(id => ObjectId.Parse(id)).ToList());
+            offer.Author = await _userRepository.GetById(ObjectId.Parse(offer.AuthorId));
+        }
+
         var result = _mapper.Map<IEnumerable<OfferResultDto>>(offers);
         return result;
     }

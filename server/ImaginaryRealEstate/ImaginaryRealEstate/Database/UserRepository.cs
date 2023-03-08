@@ -25,14 +25,15 @@ public class UserRepository: IUserRepository
     public async Task<User> GetByEmail(string email) =>
         await _usersCollection.Find(user => user.Email == email).FirstOrDefaultAsync();
 
+    public async Task<IEnumerable<User>> GetManyByIds(IEnumerable<ObjectId> usersIds) =>
+        await _usersCollection.Find(user => usersIds.Contains(user.Id)).ToListAsync();
+    
+
     public async Task Insert(User user) =>
         await _usersCollection.InsertOneAsync(user);
 
     public async Task Update(User user)
     {
-        var update = Builders<User>.Update
-            .Set(newUser => newUser, user);
-
-        await _usersCollection.UpdateOneAsync((oldUser) => oldUser.Id == user.Id, update);
+        await _usersCollection.ReplaceOneAsync((oldUser) => oldUser.Id == user.Id, user);
     }
 }

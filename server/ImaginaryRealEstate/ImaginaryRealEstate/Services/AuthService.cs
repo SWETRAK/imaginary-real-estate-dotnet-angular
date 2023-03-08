@@ -3,7 +3,6 @@ using System.Security.Claims;
 using System.Text;
 using AutoMapper;
 using ImaginaryRealEstate.Authentication;
-using ImaginaryRealEstate.Database;
 using ImaginaryRealEstate.Database.Interfaces;
 using ImaginaryRealEstate.Entities;
 using ImaginaryRealEstate.Exceptions.Auth;

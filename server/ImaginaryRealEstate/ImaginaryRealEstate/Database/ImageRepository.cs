@@ -1,3 +1,4 @@
+using System.Net.Mime;
 using ImaginaryRealEstate.Consts;
 using ImaginaryRealEstate.Database.Interfaces;
 using ImaginaryRealEstate.Entities;
@@ -22,6 +23,9 @@ public class ImageRepository : IImageRepository
     public async Task<Image> GetById(ObjectId imageId) =>
         await _imagesCollection.Find(image => image.Id == imageId).FirstOrDefaultAsync();
 
+    public async Task<IEnumerable<Image>> GetManyByIds(IEnumerable<ObjectId> imageIds) =>
+        await _imagesCollection.Find(image => imageIds.Contains(image.Id)).ToListAsync();
+    
     public async Task Insert(Image image) =>
         await _imagesCollection.InsertOneAsync(image);
 }

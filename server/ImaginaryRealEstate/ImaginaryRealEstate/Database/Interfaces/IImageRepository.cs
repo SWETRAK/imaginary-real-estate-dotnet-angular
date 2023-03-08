@@ -7,5 +7,7 @@ public interface IImageRepository
 {
     Task<Image> GetById(ObjectId imageId);
 
+    Task<IEnumerable<Image>> GetManyByIds(IEnumerable<ObjectId> imageIds);
+
     Task Insert(Image image);
 }

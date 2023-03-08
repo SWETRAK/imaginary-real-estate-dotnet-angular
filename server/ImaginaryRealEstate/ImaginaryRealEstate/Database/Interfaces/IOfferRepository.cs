@@ -13,7 +13,12 @@ public interface IOfferRepository
 
     Task<IEnumerable<Offer>> GetContainingAddress(string address);
 
+    Task<IEnumerable<Offer>> GetManyByIds(IEnumerable<ObjectId> offersIds);
+    
+    Task<IEnumerable<Offer>> GetManyByAuthorId(ObjectId authorId);
+
     Task Insert(Offer offer);
 
     Task Remove(ObjectId id);
+    Task Update(Offer offer);
 }

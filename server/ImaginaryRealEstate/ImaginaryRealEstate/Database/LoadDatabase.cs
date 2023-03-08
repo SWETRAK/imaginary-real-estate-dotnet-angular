@@ -9,7 +9,6 @@ public static class LoadDatabase
     public static void AddMongoDatabase(this IServiceCollection services, WebApplicationBuilder builder)
     {
         var configuration = builder.Configuration;
-        var environment = builder.Environment;
         
         var mongoSetting = new MongoSettings();
         configuration.GetSection("MongoDB").Bind(mongoSetting);

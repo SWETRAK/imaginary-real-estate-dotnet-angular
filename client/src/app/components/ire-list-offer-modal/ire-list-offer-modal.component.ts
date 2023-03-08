@@ -101,6 +101,7 @@ export class IreListOfferModalComponent implements OnInit {
 
             this.offerHttpService.createOffer(listOfferDto).subscribe({
                 next: (offerResult: IOfferResultDto) => {
+                    console.log(offerResult);
                     if (this.frontPhoto != null) {
                         this.uploadPhoto(
                             this.frontPhoto,

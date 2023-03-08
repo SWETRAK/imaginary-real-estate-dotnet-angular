@@ -1,11 +1,10 @@
 using AutoMapper;
-using ImaginaryRealEstate.Database;
 using ImaginaryRealEstate.Database.Interfaces;
 using ImaginaryRealEstate.Entities;
 using ImaginaryRealEstate.Exceptions.Offer;
 using ImaginaryRealEstate.Models.Offers;
 using ImaginaryRealEstate.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using MongoDB.Bson;
 
 namespace ImaginaryRealEstate.Services;
@@ -17,47 +16,50 @@ public class OfferService : IOfferService
     private readonly IMapper _mapper;
     private readonly IOfferRepository _offerRepository;
     private readonly IUserRepository _userRepository;
+    private readonly IImageRepository _imageRepository;
 
     public OfferService (
         ILogger<OfferService> logger, 
         IMapper mapper, 
         IOfferRepository offerRepository, 
-        IUserRepository userRepository)
+        IUserRepository userRepository,
+        IImageRepository imageRepository)
     {
         _logger = logger;
         _mapper = mapper;
         _offerRepository = offerRepository;
         _userRepository = userRepository;
+        _imageRepository = imageRepository;
     }
     
     public async Task<IEnumerable<OfferResultDto>> GetOffers()
     {
         var offerFromDatabase = await _offerRepository.Get();
-            
-        
-        // TODO: Get values for images and likes 
-            // _dbContext
-            // .Offers
-            // .Include(i => i.Images)
-            // .Include( i => i.Likes)
-            // .ToList();
+
+        foreach (var offer in offerFromDatabase)
+        {
+            offer.Images = await _imageRepository.GetManyByIds(offer.ImagesIds.Select(id => ObjectId.Parse(id)).ToList());
+            if (offer.LikesIds is not null)
+                offer.Likes = await _userRepository.GetManyByIds(offer.LikesIds.Select(id => ObjectId.Parse(id)).ToList());
+            offer.Author = await _userRepository.GetById(ObjectId.Parse(offer.AuthorId));
+        }
 
         _logger.LogInformation("Someone gets all offers from database");
-        return _mapper.Map<List<OfferResultDto>>(offerFromDatabase);
+        var result = _mapper.Map<List<OfferResultDto>>(offerFromDatabase);
+        return result;
     }
 
     public async Task<IEnumerable<OfferResultDto>> GetOffersByAddress(string addressString)
     {
         var offerFromDatabase = await _offerRepository.GetContainingAddress(addressString);
             
-            //
-            // _dbContext
-            // .Offers
-            // .Include(i => i.Images)
-            // .Include( i => i.Likes)
-            // .Where(o => o.Address.Contains(address))
-            // .ToList();
-
+        foreach (var offer in offerFromDatabase)
+        {
+            offer.Images = await _imageRepository.GetManyByIds(offer.ImagesIds.Select(id => ObjectId.Parse(id)).ToList());
+            if (offer.LikesIds is not null) offer.Likes = await _userRepository.GetManyByIds(offer.LikesIds.Select(id => ObjectId.Parse(id)).ToList());
+            offer.Author = await _userRepository.GetById(ObjectId.Parse(offer.AuthorId));
+        }
+        
         _logger.LogInformation("Someone gets all offers for address containing {} from database", addressString);
         return _mapper.Map<List<OfferResultDto>>(offerFromDatabase);
     }
@@ -66,17 +68,14 @@ public class OfferService : IOfferService
     {
         if (!ObjectId.TryParse(idString, out var offerObjectId)) throw new NoGuidException();
         
-        var offerById = await _offerRepository.GetById(offerObjectId);
+        var offer = await _offerRepository.GetById(offerObjectId);
+        offer.Images = await _imageRepository.GetManyByIds(offer.ImagesIds.Select(id => ObjectId.Parse(id)).ToList());
+        if (offer.LikesIds is not null) offer.Likes = await _userRepository.GetManyByIds(offer.LikesIds.Select(id => ObjectId.Parse(id)).ToList());
+        offer.Author = await _userRepository.GetById(ObjectId.Parse(offer.AuthorId));
         
-        // _dbContext.Offers
-            // .Include(i => i.Images)
-            // .Include(i => i.Author)
-            // .Include(i => i.Likes)
-            // .FirstOrDefault(w => w.Id == idString);
+        if (offer == null) throw new OfferNotFountException();
         
-        if (offerById == null) throw new OfferNotFountException();
-        
-        var result = _mapper.Map<OfferResultDto>(offerById);
+        var result = _mapper.Map<OfferResultDto>(offer);
         return result;
     }
 
@@ -88,7 +87,7 @@ public class OfferService : IOfferService
         if (user == null) throw new OfferNotFountException();
         
         var offer = _mapper.Map<Offer>(incomingDto);
-        offer.Author = user;
+        offer.AuthorId = user.Id.ToString();
         await _offerRepository.Insert(offer);
         var result = _mapper.Map<OfferResultDto>(offer);
         return result;
@@ -106,49 +105,44 @@ public class OfferService : IOfferService
         return true;
     }
 
-    // public bool LikeOffer(string offerIdString, string userIdString)
-    // {
-    //     var offer = _dbContext.Offers
-    //         .Include(o => o.Likes)
-    //         .FirstOrDefault(o => o.Id == offerIdString);
-    //     
-    //     var user = _dbContext.Users
-    //         .Include(u => u.LikedOffers)
-    //         .FirstOrDefault(u => u.Id == userIdString);
-    //
-    //
-    //     if (offer is null) throw new OfferNotFountException();
-    //     if (user is null) throw new OfferNotFountException();
-    //     
-    //     offer.Likes = offer.Likes.Append(user).ToList();
-    //     user.LikedOffers = user.LikedOffers.Append(offer).ToList();
-    //
-    //     _dbContext.Offers.Update(offer);
-    //     _dbContext.Users.Update(user);
-    //
-    //     _dbContext.SaveChanges();
-    //     return true;
-    // }
-    //
-    // public bool UnLikeOffer(string offerIdString, string userIdString)
-    // {
-    //     var offer = _dbContext.Offers
-    //         .Include(o => o.Likes)
-    //         .FirstOrDefault(o => o.Id == offerIdString);
-    //     var user = _dbContext.Users
-    //         .Include(u => u.LikedOffers)
-    //         .FirstOrDefault(u => u.Id == userIdString);
-    //
-    //     if (offer is null) throw new OfferNotFountException();
-    //     if (user is null) throw new OfferNotFountException();
-    //
-    //     offer.Likes = offer.Likes.Where(u => u.Id != user.Id).ToList();
-    //     user.LikedOffers = user.LikedOffers.Where(o => o.Id != offer.Id).ToList();
-    //
-    //     _dbContext.Offers.Update(offer);
-    //     _dbContext.Users.Update(user);
-    //
-    //     _dbContext.SaveChanges();
-    //     return true;
-    // }
+    public async Task<bool> LikeOffer(string offerIdString, string userIdString)
+    {
+        if (!ObjectId.TryParse(userIdString, out var userObejctId)) throw new NoGuidException();
+        if (!ObjectId.TryParse(offerIdString, out var offerObjectId)) throw new NoGuidException();
+        
+        var offer = await _offerRepository.GetById(offerObjectId);
+        var user = await _userRepository.GetById(userObejctId);
+
+        if (offer is null) throw new OfferNotFountException();
+        if (user is null) throw new OfferNotFountException();
+        
+        offer.LikesIds.Add(user.Id.ToString());
+        if (user.LikedOffersIds is null) user.LikedOffersIds = new List<string>();
+        user.LikedOffersIds.Add(offer.Id.ToString());
+
+        await _userRepository.Update(user);
+        await _offerRepository.Update(offer);
+        
+        return true;
+    }
+
+    public async Task<bool> UnLikeOffer(string offerIdString, string userIdString)
+    {
+        if (!ObjectId.TryParse(userIdString, out var userObejctId)) throw new NoGuidException();
+        if (!ObjectId.TryParse(offerIdString, out var offerObjectId)) throw new NoGuidException();
+        
+        var offer = await _offerRepository.GetById(offerObjectId);
+        var user = await _userRepository.GetById(userObejctId);
+    
+        if (offer is null) throw new OfferNotFountException();
+        if (user is null) throw new OfferNotFountException();
+    
+        offer.LikesIds.Remove(user.Id.ToString());
+        user.LikedOffersIds.Remove(offer.Id.ToString());
+        
+        await _userRepository.Update(user);
+        await _offerRepository.Update(offer);
+
+        return true;
+    }
 }
