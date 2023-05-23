@@ -9,7 +9,6 @@ using ImaginaryRealEstate.Models.Users;
 using ImaginaryRealEstate.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Serializers;
 
 namespace ImaginaryRealEstate.Services;
 
