@@ -15,8 +15,8 @@ public static class LoadAuthentication
         var authenticationSettings = new AuthenticationSettings();
         configuration.GetSection("Authentication").Bind(authenticationSettings);
 
-        var awsS3Settings = new AwsS3Setting();
-        configuration.GetSection("AwsS3Config").Bind(awsS3Settings);
+        var minioSetting = new MinioSetting();
+        configuration.GetSection("MinIO").Bind(minioSetting);
         
         services
             .AddAuthentication(options =>
@@ -52,7 +52,7 @@ public static class LoadAuthentication
             });
 
         services.AddSingleton<AuthenticationSettings>(authenticationSettings);
-        services.AddSingleton<AwsS3Setting>(awsS3Settings);
+        services.AddSingleton<MinioSetting>(minioSetting);
         return services;
     }
 }

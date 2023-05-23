@@ -12,25 +12,23 @@ public class ImageService: IImageService
     private readonly DomainDbContext _dbContext;
     private readonly ILogger<ImageService> _logger;
     private readonly IMapper _mapper;
-    private readonly IS3Service _s3Service;
-    private readonly AwsS3Setting _s3Setting;
+    private readonly IMinioService _minioService;
 
     public ImageService( 
         DomainDbContext dbContext, 
         ILogger<ImageService> logger, 
         IMapper mapper, 
-        IS3Service s3Service,
-        AwsS3Setting s3Settings
+        IMinioService minioService,
+        MinioSetting minioSetting
         )
     {
         _dbContext = dbContext;
         _logger = logger;
         _mapper = mapper;
-        _s3Service = s3Service;
-        _s3Setting = s3Settings;
+        _minioService = minioService;
     }
 
-    public ImageOfferResultDto CreateImage(IFormFile file, string offerId, bool frontPhoto)
+    public async Task<ImageOfferResultDto> CreateImage(IFormFile file, string offerId, bool frontPhoto)
     {
         Console.WriteLine(offerId);
         if (!Guid.TryParse(offerId, out var offerIdGuid)) throw new NoGuidException();
@@ -50,11 +48,11 @@ public class ImageService: IImageService
         var contentType = file.ContentType;
         Console.Write(contentType);
 
-        using var stream = file.OpenReadStream();
+        await using var stream = file.OpenReadStream();
         using var memoryStream = new MemoryStream();
-        stream.CopyTo(memoryStream);
-        _s3Service.UploadFile(_s3Setting.AwsBucketName, memoryStream, contentType, imageEntity.FileName);
-        _dbContext.SaveChanges();
+        await stream.CopyToAsync(memoryStream);
+        await _minioService.InsertFile(imageEntity.FileName, contentType, memoryStream);
+        await _dbContext.SaveChangesAsync();
         _logger.LogInformation("Photo with {} id and {} aws key was uploaded", imageEntity.Id, imageEntity.FileName);
         
         var result = _mapper.Map<ImageOfferResultDto>(imageEntity);
@@ -69,7 +67,7 @@ public class ImageService: IImageService
         if (image == null) throw new OfferNotFountException();
         this._logger.LogInformation("Photo with {} id was downloaded", image.Id);
 
-        var response = await _s3Service.GetFile(_s3Setting.AwsBucketName, image.FileName);
+        var response = await _minioService.GetFile(image.FileName);
         return response;
     }
 }
