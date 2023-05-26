@@ -1,0 +1,60 @@
+2023-05-26 08:31:32.937 +02:00 [DBG] Registered model binder providers, in the following order: ["Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BinderTypeModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ServicesModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BodyModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.HeaderModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.FloatingPointTypeModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.EnumTypeModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.DateTimeModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.SimpleTypeModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.CancellationTokenModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ByteArrayModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.FormFileModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.FormCollectionModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.KeyValuePairModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.DictionaryModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ArrayModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.CollectionModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ComplexObjectModelBinderProvider"]
+2023-05-26 08:31:33.082 +02:00 [DBG] Hosting starting
+2023-05-26 08:31:33.098 +02:00 [INF] User profile is available. Using '/Users/kamilpietrak/.aspnet/DataProtection-Keys' as key repository; keys will not be encrypted at rest.
+2023-05-26 08:31:33.108 +02:00 [DBG] Reading data from file '/Users/kamilpietrak/.aspnet/DataProtection-Keys/key-23449101-6b84-4fa6-a497-dbdc07f31060.xml'.
+2023-05-26 08:31:33.117 +02:00 [DBG] Reading data from file '/Users/kamilpietrak/.aspnet/DataProtection-Keys/key-fc4979f9-e926-4c23-bb59-8a6defd3da5c.xml'.
+2023-05-26 08:31:33.137 +02:00 [DBG] Found key {23449101-6b84-4fa6-a497-dbdc07f31060}.
+2023-05-26 08:31:33.158 +02:00 [DBG] Found key {fc4979f9-e926-4c23-bb59-8a6defd3da5c}.
+2023-05-26 08:31:33.179 +02:00 [DBG] Considering key {fc4979f9-e926-4c23-bb59-8a6defd3da5c} with expiration date 2023-06-23 17:58:23Z as default key.
+2023-05-26 08:31:33.182 +02:00 [DBG] Forwarded activator type request from Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AuthenticatedEncryptorDescriptorDeserializer, Microsoft.AspNetCore.DataProtection, Version=7.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60 to Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AuthenticatedEncryptorDescriptorDeserializer, Microsoft.AspNetCore.DataProtection, Culture=neutral, PublicKeyToken=adb9793829ddae60
+2023-05-26 08:31:33.184 +02:00 [DBG] Using managed symmetric algorithm 'System.Security.Cryptography.Aes'.
+2023-05-26 08:31:33.185 +02:00 [DBG] Using managed keyed hash algorithm 'System.Security.Cryptography.HMACSHA256'.
+2023-05-26 08:31:33.201 +02:00 [DBG] Using key {fc4979f9-e926-4c23-bb59-8a6defd3da5c} as the default key.
+2023-05-26 08:31:33.201 +02:00 [DBG] Key ring with default key {fc4979f9-e926-4c23-bb59-8a6defd3da5c} was loaded during application startup.
+2023-05-26 08:31:33.428 +02:00 [DBG] Using development certificate: CN=localhost (Thumbprint: C85CF83C79E64337CFE88425A0D4C24C6BC8B0DA)
+2023-05-26 08:31:33.472 +02:00 [INF] Now listening on: https://localhost:7201
+2023-05-26 08:31:33.472 +02:00 [INF] Now listening on: http://localhost:5234
+2023-05-26 08:31:33.472 +02:00 [DBG] Loaded hosting startup assembly ImaginaryRealEstate
+2023-05-26 08:31:33.477 +02:00 [INF] Application started. Press Ctrl+C to shut down.
+2023-05-26 08:31:33.479 +02:00 [INF] Hosting environment: Development
+2023-05-26 08:31:33.479 +02:00 [INF] Content root path: /Users/kamilpietrak/Documents/Dotnet Projects/imaginary-real-estate-dotnet-angular/server/ImaginaryRealEstate/ImaginaryRealEstate/
+2023-05-26 08:31:33.479 +02:00 [DBG] Hosting started
+2023-05-26 08:31:33.611 +02:00 [DBG] Connection id "0HMQTMBCMG8FF" received FIN.
+2023-05-26 08:31:33.637 +02:00 [DBG] Connection id "0HMQTMBCMG8FF" accepted.
+2023-05-26 08:31:33.640 +02:00 [DBG] Connection id "0HMQTMBCMG8FF" started.
+2023-05-26 08:31:33.677 +02:00 [DBG] Failed to authenticate HTTPS connection.
+System.IO.IOException:  Received an unexpected EOF or 0 bytes from the transport stream.
+   at System.Net.Security.SslStream.ReceiveBlobAsync[TIOAdapter](TIOAdapter adapter)
+   at System.Net.Security.SslStream.ForceAuthenticationAsync[TIOAdapter](TIOAdapter adapter, Boolean receiveFirst, Byte[] reAuthenticationData, Boolean isApm)
+   at Microsoft.AspNetCore.Server.Kestrel.Https.Internal.HttpsConnectionMiddleware.OnConnectionAsync(ConnectionContext context)
+2023-05-26 08:31:33.730 +02:00 [DBG] Connection id "0HMQTMBCMG8FF" stopped.
+2023-05-26 08:31:33.736 +02:00 [DBG] Connection id "0HMQTMBCMG8FF" sending FIN because: "The Socket transport's send loop completed gracefully."
+2023-05-26 08:31:34.499 +02:00 [DBG] Connection id "0HMQTMBCMG8FG" accepted.
+2023-05-26 08:31:34.499 +02:00 [DBG] Connection id "0HMQTMBCMG8FG" started.
+2023-05-26 08:31:34.641 +02:00 [DBG] Connection 0HMQTMBCMG8FG established using the following protocol: "Tls12"
+2023-05-26 08:31:34.766 +02:00 [INF] Request starting HTTP/1.1 GET https://localhost:7201/swagger/index.html - -
+2023-05-26 08:31:34.769 +02:00 [DBG] Wildcard detected, all requests with hosts will be allowed.
+2023-05-26 08:31:34.882 +02:00 [DBG] No candidates found for the request path '/swagger/index.html'
+2023-05-26 08:31:34.883 +02:00 [DBG] Request did not match any endpoints
+2023-05-26 08:31:35.385 +02:00 [DBG] Connection id "0HMQTMBCMG8FG" completed keep alive response.
+2023-05-26 08:31:35.388 +02:00 [INF] Request finished HTTP/1.1 GET https://localhost:7201/swagger/index.html - - - 200 - text/html;charset=utf-8 635.2312ms
+2023-05-26 08:31:35.422 +02:00 [DBG] Connection id "0HMQTMBCMG8FH" accepted.
+2023-05-26 08:31:35.423 +02:00 [DBG] Connection id "0HMQTMBCMG8FH" started.
+2023-05-26 08:31:35.433 +02:00 [INF] Request starting HTTP/1.1 GET https://localhost:7201/swagger/swagger-ui-bundle.js - -
+2023-05-26 08:31:35.435 +02:00 [DBG] No candidates found for the request path '/swagger/swagger-ui-bundle.js'
+2023-05-26 08:31:35.435 +02:00 [DBG] Request did not match any endpoints
+2023-05-26 08:31:35.442 +02:00 [DBG] Connection 0HMQTMBCMG8FH established using the following protocol: "Tls12"
+2023-05-26 08:31:35.443 +02:00 [INF] Request starting HTTP/1.1 GET https://localhost:7201/swagger/swagger-ui-standalone-preset.js - -
+2023-05-26 08:31:35.443 +02:00 [DBG] No candidates found for the request path '/swagger/swagger-ui-standalone-preset.js'
+2023-05-26 08:31:35.443 +02:00 [DBG] Request did not match any endpoints
+2023-05-26 08:31:35.489 +02:00 [INF] Sending file. Request path: '/swagger-ui-standalone-preset.js'. Physical path: 'N/A'
+2023-05-26 08:31:35.489 +02:00 [INF] Sending file. Request path: '/swagger-ui-bundle.js'. Physical path: 'N/A'
+2023-05-26 08:31:35.492 +02:00 [DBG] Connection id "0HMQTMBCMG8FG" completed keep alive response.
+2023-05-26 08:31:35.492 +02:00 [DBG] Connection id "0HMQTMBCMG8FH" completed keep alive response.
+2023-05-26 08:31:35.493 +02:00 [INF] Request finished HTTP/1.1 GET https://localhost:7201/swagger/swagger-ui-bundle.js - - - 200 1092889 application/javascript 59.6580ms
+2023-05-26 08:31:35.493 +02:00 [INF] Request finished HTTP/1.1 GET https://localhost:7201/swagger/swagger-ui-standalone-preset.js - - - 200 337162 application/javascript 49.7749ms
+2023-05-26 08:31:35.655 +02:00 [INF] Request starting HTTP/1.1 GET https://localhost:7201/swagger/v1/swagger.json - -
+2023-05-26 08:31:35.655 +02:00 [DBG] No candidates found for the request path '/swagger/v1/swagger.json'
+2023-05-26 08:31:35.655 +02:00 [DBG] Request did not match any endpoints
+2023-05-26 08:31:35.904 +02:00 [DBG] Connection id "0HMQTMBCMG8FG" completed keep alive response.
+2023-05-26 08:31:35.905 +02:00 [INF] Request finished HTTP/1.1 GET https://localhost:7201/swagger/v1/swagger.json - - - 200 - application/json;charset=utf-8 250.1064ms
