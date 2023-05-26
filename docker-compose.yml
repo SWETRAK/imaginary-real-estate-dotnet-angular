@@ -1,0 +1,74 @@
+version: '3.8'
+
+networks:
+  frontend:
+    driver: bridge
+  backend: 
+    driver: bridge
+
+services:
+
+  irl-minio:
+    image: bitnami/minio:latest
+    container_name: irl-minio
+    ports:
+      - 9001:9001
+    environment: 
+      - MINIO_SERVER_ACCESS_KEY="KkVHcZCMVf8vSqdQ" 
+      - MINIO_SERVER_SECRET_KEY="kYRv1SJ8CWiONFACnpKQjRUEMFePt5Oz"
+    networks:
+      - backend
+
+  irl-postgres:
+    image: postgres:alpine
+    container_name: irl-postgres
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+    networks:
+      - backend
+    
+  irl-adminer:
+    image: adminer
+    container_name: irl-adminer
+    restart: always
+    ports:
+      - 42069:8080
+    networks:
+      - backend
+
+  irl-backend:
+    build: 
+      context: ./server/ImaginaryRealEstate
+      dockerfile: ./ImaginaryRealEstate/Dockerfile
+    container_name: irl-backend
+    ports:
+      - 6968:443
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS="https://+6968;"
+      - ASPNETCORE_Kestrel__Certificates__Default__Password="password"
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+    volumes:
+      - ~/.aspnet/https:/https:ro
+    networks:
+      - backend
+      - frontend
+    depends_on:
+      - irl-postgres
+      - irl-minio
+    links:
+      - irl-postgres
+      - irl-minio
+
+  irl-frontend:
+    build:
+      context: ./client
+      dockerfile: ./Dockerfile
+    container_name: irl-frontend
+    ports:
+      - 6969:8080
+    networks:
+      - frontend
+    depends_on:
+      - irl-backend

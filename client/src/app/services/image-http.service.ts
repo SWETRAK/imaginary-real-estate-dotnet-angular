@@ -12,7 +12,7 @@ export class ImageHttpService {
     ) {
     }
 
-    private urlBase: string = "https://localhost:7201/images/";
+    private urlBase: string = "https://localhost:6968/images/";
 
     public uploadImage(dane: FormData) {
         return this.http.post<IImageOfferResultDto>(this.urlBase, dane, {withCredentials: true});
