@@ -12,7 +12,7 @@ export class UserHttpService {
     constructor(private http: HttpClient) {
     }
 
-    private urlBase: string = "https://localhost:6968/user/"
+    private urlBase: string = "http://localhost:8080/user/"
 
     public changePassword(newPassword: IChangePasswordDto) {
         return this.http.put<IUserInfoDto>(this.urlBase + "update/password", newPassword, {withCredentials: true});

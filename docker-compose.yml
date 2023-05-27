@@ -5,6 +5,8 @@ networks:
     driver: bridge
   backend: 
     driver: bridge
+  proxy:
+    driver: bridge
 
 services:
 
@@ -14,10 +16,11 @@ services:
     ports:
       - 9001:9001
     environment: 
-      - MINIO_SERVER_ACCESS_KEY="KkVHcZCMVf8vSqdQ" 
-      - MINIO_SERVER_SECRET_KEY="kYRv1SJ8CWiONFACnpKQjRUEMFePt5Oz"
+      - MINIO_ROOT_USER=minioroot
+      - MINIO_ROOT_PASSWORD=miniopassword
     networks:
       - backend
+      - proxy
 
   irl-postgres:
     image: postgres:alpine
@@ -43,32 +46,32 @@ services:
       dockerfile: ./ImaginaryRealEstate/Dockerfile
     container_name: irl-backend
     ports:
-      - 6968:443
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS="https://+6968;"
-      - ASPNETCORE_Kestrel__Certificates__Default__Password="password"
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-    volumes:
-      - ~/.aspnet/https:/https:ro
+      - 8080:80
     networks:
       - backend
       - frontend
+      - proxy
     depends_on:
       - irl-postgres
       - irl-minio
     links:
       - irl-postgres
       - irl-minio
-
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 5
+      
   irl-frontend:
     build:
       context: ./client
       dockerfile: ./Dockerfile
     container_name: irl-frontend
     ports:
-      - 6969:8080
+      - 80:8080
     networks:
       - frontend
+      - proxy
     depends_on:
       - irl-backend

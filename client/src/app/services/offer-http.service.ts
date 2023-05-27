@@ -11,7 +11,7 @@ export class OfferHttpService {
     constructor(private http: HttpClient) {
     }
 
-    private urlBase: string = "https://localhost:6968/offers/";
+    private urlBase: string = "http://localhost:8080/offers/";
 
     public getAllOffers() {
         return this.http.get<Array<IOfferResultDto>>(this.urlBase);

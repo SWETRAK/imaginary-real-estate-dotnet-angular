@@ -4,11 +4,17 @@ using ImaginaryRealEstate.Authorization;
 using ImaginaryRealEstate.Middlewares;
 using ImaginaryRealEstate.Services;
 using ImaginaryRealEstate.Validators;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // This is needed to Datetime works properly
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
+using (var context = new DomainDbContext(builder.Configuration))
+{
+    context.Database.Migrate();
+}
 
 // Logger configuration
 builder.Logging.AddMyLogger();
@@ -47,10 +53,8 @@ app.UseCors(x => x
         .AllowAnyMethod()
         .AllowAnyHeader()
         .SetIsOriginAllowed(origin => true) // allow any origin
-        // .WithOrigins("https://localhost:4200")); // Allow only this origin can also have multiple origins separated with comma
         .AllowCredentials()); // allow credentials
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -59,7 +63,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthentication();
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseMiddlewares();
 

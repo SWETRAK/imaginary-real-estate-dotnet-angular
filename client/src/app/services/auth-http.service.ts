@@ -13,7 +13,7 @@ export class AuthHttpService {
     constructor(private http: HttpClient) {
     }
 
-    private urlBase: string = "https://localhost:6968/auth";
+    private urlBase: string = "http://localhost:8080/auth";
 
     public isUserLoggedIn = () => {
         return this.http.get<IUserInfoDto>(this.urlBase, {withCredentials: true});
