@@ -30,7 +30,7 @@ export class IreOfferInfoPageComponent implements OnInit {
                     this.offer = result;
                     const frontImageObject = this.offer.images.find((image:IImageOfferResultDto) => image.frontPhoto);
                     if(frontImageObject) {
-                        this.frontImage = "https://localhost:7201/images/"+ frontImageObject.identifier;
+                        this.frontImage = "http://localhost:8080/images/"+ frontImageObject.identifier;
                     } else {
                         this.frontImage = "/assets/img/pexelsLublin.jpg";
                     }

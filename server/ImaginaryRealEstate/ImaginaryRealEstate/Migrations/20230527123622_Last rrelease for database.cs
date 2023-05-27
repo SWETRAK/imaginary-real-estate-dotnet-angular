@@ -6,25 +6,34 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ImaginaryRealEstate.Migrations
 {
     /// <inheritdoc />
-    public partial class ImplementedImageAndOffer : Migration
+    public partial class Lastrreleasefordatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<DateTime>(
-                name: "DateOfBirth",
-                table: "Users",
-                type: "timestamp without time zone",
-                nullable: false,
-                oldClrType: typeof(DateTime),
-                oldType: "timestamp with time zone");
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Email = table.Column<string>(type: "text", nullable: false),
+                    HashPassword = table.Column<string>(type: "text", nullable: true),
+                    DateOfBirth = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    FirstName = table.Column<string>(type: "text", nullable: false),
+                    LastName = table.Column<string>(type: "text", nullable: false),
+                    Role = table.Column<string>(type: "text", nullable: false, defaultValue: "USER")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "Offers",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Title = table.Column<string>(type: "text", nullable: false),
+                    Title = table.Column<string>(type: "character varying(2048)", maxLength: 2048, nullable: false),
                     Address = table.Column<string>(type: "text", nullable: false),
                     AuthorId = table.Column<Guid>(type: "uuid", nullable: false),
                     Price = table.Column<float>(type: "real", nullable: false),
@@ -51,7 +60,6 @@ namespace ImaginaryRealEstate.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     OfferId = table.Column<Guid>(type: "uuid", nullable: false),
                     FileName = table.Column<string>(type: "text", nullable: false),
-                    Url = table.Column<string>(type: "text", nullable: false),
                     IsFrontPhoto = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
@@ -65,6 +73,30 @@ namespace ImaginaryRealEstate.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "OfferUser",
+                columns: table => new
+                {
+                    LikedOffersId = table.Column<Guid>(type: "uuid", nullable: false),
+                    LikesId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OfferUser", x => new { x.LikedOffersId, x.LikesId });
+                    table.ForeignKey(
+                        name: "FK_OfferUser_Offers_LikedOffersId",
+                        column: x => x.LikedOffersId,
+                        principalTable: "Offers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OfferUser_Users_LikesId",
+                        column: x => x.LikesId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Images_OfferId",
                 table: "Images",
@@ -74,6 +106,11 @@ namespace ImaginaryRealEstate.Migrations
                 name: "IX_Offers_AuthorId",
                 table: "Offers",
                 column: "AuthorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OfferUser_LikesId",
+                table: "OfferUser",
+                column: "LikesId");
         }
 
         /// <inheritdoc />
@@ -83,15 +120,13 @@ namespace ImaginaryRealEstate.Migrations
                 name: "Images");
 
             migrationBuilder.DropTable(
+                name: "OfferUser");
+
+            migrationBuilder.DropTable(
                 name: "Offers");
 
-            migrationBuilder.AlterColumn<DateTime>(
-                name: "DateOfBirth",
-                table: "Users",
-                type: "timestamp with time zone",
-                nullable: false,
-                oldClrType: typeof(DateTime),
-                oldType: "timestamp without time zone");
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }

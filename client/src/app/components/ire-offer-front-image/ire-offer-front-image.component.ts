@@ -9,7 +9,7 @@ import {EmptyImageOfferResultDto, IImageOfferResultDto} from "../../interfaces/I
 export class IreOfferFrontImageComponent implements OnInit{
 
     @Input("image") image: IImageOfferResultDto;
-    protected photoUrl: string = 'https://localhost:7201/images/';
+    protected photoUrl: string = 'http://localhost:8080/images/';
 
     constructor() {
         this.image = EmptyImageOfferResultDto();

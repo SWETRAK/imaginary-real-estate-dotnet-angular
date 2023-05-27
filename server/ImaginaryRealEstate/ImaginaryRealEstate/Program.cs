@@ -11,11 +11,6 @@ var builder = WebApplication.CreateBuilder(args);
 // This is needed to Datetime works properly
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-using (var context = new DomainDbContext(builder.Configuration))
-{
-    context.Database.Migrate();
-}
-
 // Logger configuration
 builder.Logging.AddMyLogger();
 
@@ -48,6 +43,12 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAuthenticationCustom(builder);
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<DomainDbContext>();
+    db.Database.Migrate();
+}
 
 app.UseCors(x => x
         .AllowAnyMethod()

@@ -27,9 +27,9 @@ public class ImageController: Controller
     
     [Authorize(Roles = $"{Roles.Author},{Roles.Admin}")]
     [HttpPost]
-    public ActionResult<ImageOfferResultDto> UploadImage([FromForm(Name = "offerGuid")] string offerGuid, [FromForm(Name = "frontPhoto")] bool frontPhoto, IFormFile file)
+    public async Task<ActionResult<ImageOfferResultDto>>UploadImage([FromForm(Name = "offerGuid")] string offerGuid, [FromForm(Name = "frontPhoto")] bool frontPhoto, IFormFile file)
     {
-        var result = _imageService.CreateImage(file, offerGuid, frontPhoto);
+        var result = await _imageService.CreateImage(file, offerGuid, frontPhoto);
         return Ok(result);
     }
 }

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ImaginaryRealEstate.Migrations
 {
     [DbContext(typeof(DomainDbContext))]
-    [Migration("20230524193206_Last release")]
-    partial class Lastrelease
+    [Migration("20230527123622_Last rrelease for database")]
+    partial class Lastrreleasefordatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
