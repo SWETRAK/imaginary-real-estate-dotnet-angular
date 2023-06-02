@@ -1,0 +1,6 @@
+**/node_modules/**
+
+**/.angular/**
+
+**/[Bb]in
+**/[Oo]bj
